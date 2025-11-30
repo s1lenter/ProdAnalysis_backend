@@ -1,0 +1,31 @@
+﻿services:
+  productionanalysisbackend:
+    image: productionanalysisbackend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=PA_DB;Username=user;Password=password
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    restart: unless-stopped
+  
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=PA_DB
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
