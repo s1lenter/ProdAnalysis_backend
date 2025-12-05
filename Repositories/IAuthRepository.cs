@@ -21,7 +21,7 @@ public interface IAuthRepository
 
     public Task<RefreshToken> GetRefreshTokenAsync(string token);
 
-    public Task<RefreshToken> GetRefreshTokenAsync(int userId);
+    public Task<RefreshToken?> GetRefreshTokenAsync(int userId);
 
     public Task<User?> GetUserByUsernameAsync(string userName);
 

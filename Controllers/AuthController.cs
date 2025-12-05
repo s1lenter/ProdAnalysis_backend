@@ -6,7 +6,7 @@ using ProductionAnalysisBackend.Services;
 namespace ProductionAnalysisBackend.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("/api")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
         var result = await _authService.RegisterAsync(registerDto);
@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDto userLoginDto)
     {
         var response = await _authService.LoginAsync(userLoginDto, HttpContext);
@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
     }
     
     [Authorize]
-    [HttpPost("/logout")]
+    [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
         var response = await _authService.LogoutAsync(HttpContext);
@@ -45,7 +45,7 @@ public class AuthController : ControllerBase
         return BadRequest("Error!");
     }
 
-    [HttpPost("/refresh")]
+    [HttpPost("refresh")]
     public async Task<IActionResult> RefreshAccessToken()
     {
         var response = await _authService.RefreshAccessTokenAsync(
@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("/secret")]
+    [HttpGet("secret")]
     public IActionResult GetSecret()
     {
         return Ok("You authorized!");

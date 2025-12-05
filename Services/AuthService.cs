@@ -51,4 +51,41 @@ public class AuthService : IAuthService
         }
         return Result<TokenResponseDto?>.Failure("Неверный пароль");
     }
+    
+    public async Task<Result<string>> LogoutAsync(HttpContext context)
+    {
+        var errorRes = new List<Dictionary<string, string>>();
+
+        var user = await _repository.GetUserByUsernameAsync(context.User.Identity.Name);
+        if (user == null)
+            return Result<string>.Failure("Такого пользователя не существует");
+
+        context.Response.Cookies.Delete("token");
+
+        await _repository.DeleteRefreshTokenAsync(user.Id);
+        return Result<string>.Success("");
+    }
+
+    public async Task<Result<string>> RefreshAccessTokenAsync(string accessToken, HttpContext httpContext)
+    {
+        var errorRes = new List<Dictionary<string, string>>();
+
+        var principal = await _tokenService.GetClaimsFromToken(accessToken);
+        var userId = principal.Claims.FirstOrDefault(c =>
+            c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")!.Value;
+        var savedRefreshToken = await _repository.GetRefreshTokenAsync(int.Parse(userId));
+
+        if (savedRefreshToken is null)
+            return Result<string>.Failure("Пользователь не имеет refresh токен");
+        
+        if (savedRefreshToken.RefreshTokenExpiryTime < DateTime.UtcNow)
+            return Result<string>.Failure("Истек срок действия refresh токена");
+
+        var newAccessToken = _tokenService.UpdateAccessToken(principal.Claims);
+
+        httpContext.Response.Cookies.Delete("token");
+        httpContext.Response.Cookies.Append("token", newAccessToken);
+
+        return Result<string>.Success(newAccessToken);
+    }
 }
