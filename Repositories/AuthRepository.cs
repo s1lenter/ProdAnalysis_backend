@@ -23,7 +23,7 @@ public class AuthRepository : IAuthRepository
     public async Task<User?> GetUserAsync(LoginDto userLoginDto)
     {
         return await _context.Users.FirstOrDefaultAsync(user => 
-            user.Username == userLoginDto.PersonalKey); 
+            user.Username == userLoginDto.Email); 
     }
 
     public async Task CreateUserAsync(User user)
@@ -62,7 +62,7 @@ public class AuthRepository : IAuthRepository
 
     public async Task<User?> GetUserAync(LoginDto userDto)
     {
-        return await GetUserByUsernameAsync(userDto.PersonalKey);
+        return await GetUserByUsernameAsync(userDto.Email);
     }
 
     public async Task<User?> GetUserAsync(int id)

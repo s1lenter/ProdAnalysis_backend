@@ -25,6 +25,7 @@ public class AuthService : IAuthService
         var newUser =  _mapper.Map<User>(registerDto);
         newUser.DepartamentId = 1;
         newUser.RoleId = 1;
+        // newUser.PersonalKey = Guid.NewGuid().ToString();
         await _repository.RegisterAsync(newUser);
         return Result<string>.Success("User created");
     }
@@ -37,7 +38,7 @@ public class AuthService : IAuthService
         if (user is null)
             return Result<TokenResponseDto?>.Failure("Такого пользователя не существует");
 
-        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, userLoginDto.Password) 
+        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PersonalKey, userLoginDto.PersonalKey) 
             == PasswordVerificationResult.Success)
         {
             var accessToken = _tokenService.CreateToken(user);

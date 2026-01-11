@@ -13,7 +13,7 @@ public class AppMapperProfile : Profile
                 opt.MapFrom(src => $"{src.LastName} {src.FirstName} {src.MiddleName}"))
             .ForMember(user => user.Username, opt => 
                 opt.MapFrom(src => src.PersonalKey))
-            .ForMember(user => user.PasswordHash, opt => 
+            .ForMember(user => user.PersonalKey, opt => 
                 opt.MapFrom(src => PasswordHasher.GetHash(src.Password)));
     }
 }

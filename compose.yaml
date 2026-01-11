@@ -4,10 +4,12 @@
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8080:80"
+    expose:
+      - "80"
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=PA_DB;Username=user;Password=password
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
     depends_on:
       - db
     volumes:
@@ -22,9 +24,11 @@
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "3000:80"
+      - "8088:80"
     depends_on:
       - backend
+    environment:
+      - REACT_APP_API_URL=/api
     networks:
       - app-network
   
@@ -37,13 +41,13 @@
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_new:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - app-network
 
 volumes:
-  postgres_data:
+  postgres_data_new:
 
 networks:
   app-network:
