@@ -24,10 +24,10 @@ public class SupervizorController : ControllerBase
         return Ok();
     }
     
-    [HttpPost("shift/create")]
-    public async Task<IActionResult> Create([FromForm] ShiftCreateDto shiftCreateDto)
-    {
-        var result = await _supervizorService.CreateShiftAsync(shiftCreateDto);
-        return Ok();
-    }
+    // [HttpPost("shift/create")]
+    // public async Task<IActionResult> Create([FromForm] ShiftCreateDto shiftCreateDto)
+    // {
+    //     var result = await _supervizorService.CreateShiftAsync(shiftCreateDto);
+    //     return Ok();
+    // }
 }

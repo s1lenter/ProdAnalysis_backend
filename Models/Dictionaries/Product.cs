@@ -1,6 +1,6 @@
 namespace ProductionAnalysisBackend.Models;
 
-public class Product
+public class Product : IDictionaryEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProductionAnalysisBackend;
+using ProductionAnalysisBackend.Dto;
 using ProductionAnalysisBackend.Mapping;
 using ProductionAnalysisBackend.Middlewares;
+using ProductionAnalysisBackend.Models;
 using ProductionAnalysisBackend.Services;
 using ProductionAnalysisBackend.Services.Admin;
+using ProductionAnalysisBackend.Services.Dictionary;
 using ProductionAnalysisBackend.Services.Supervizor;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +32,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISupervizorService, SupervizorService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IDictionaryService<Product, ProductDto, ProductCreateDto>, 
+    DictionaryService<Product, ProductDto, ProductCreateDto>>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
