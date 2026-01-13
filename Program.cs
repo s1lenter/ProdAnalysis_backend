@@ -8,6 +8,8 @@ using ProductionAnalysisBackend;
 using ProductionAnalysisBackend.Mapping;
 using ProductionAnalysisBackend.Middlewares;
 using ProductionAnalysisBackend.Services;
+using ProductionAnalysisBackend.Services.Admin;
+using ProductionAnalysisBackend.Services.Supervizor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +17,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-// var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
 
 builder.Services.AddAutoMapper(typeof(AppMapperProfile));
 
@@ -24,6 +26,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISupervizorService, SupervizorService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -43,11 +48,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 using (var scope = app.Services.CreateScope())
 {
