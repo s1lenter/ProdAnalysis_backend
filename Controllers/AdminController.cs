@@ -12,13 +12,4 @@ public class AdminController : ControllerBase
     {
         _adminService = adminService;
     }
-
-    [HttpGet("guide/{guideName}")]
-    public async Task<IActionResult> GetGuide([FromRoute] string guideName)
-    {
-        var result = await _adminService.GetGuide(guideName);
-        // if (!result.IsSuccess)
-        //     return result.Error;
-        return Ok(result.Value);
-    }
 }

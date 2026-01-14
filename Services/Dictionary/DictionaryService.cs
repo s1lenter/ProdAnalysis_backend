@@ -8,19 +8,30 @@ public class DictionaryService<T, TDto, TCreateDto> : IDictionaryService<T, TDto
 {
     private readonly IDictionaryRepository<T> _repository;
     private readonly IMapper _mapper;
+    
+    private int pageSize = 1;
     public DictionaryService(AppDbContext dbContext, IMapper mapper)
     {
         _repository = new DictionaryRepository<T>(dbContext);
         _mapper = mapper;
     }
-    
+
+    public async Task<Result<List<TDto>>> GetAll(int page)
+    {
+        var dictionaries = await _repository.GetAllAsync(page, pageSize);
+        var dictDtos = _mapper.Map<List<TDto>>(dictionaries);
+        
+        return Result<List<TDto>>.Success(dictDtos);
+    }
+
     public async Task<Result<TDto>> GetDictionaryById(int id)
     {
         var dict = await _repository.GetByIdAsync(id);
-        var dictDto = _mapper.Map<TDto>(dict);
-        
         if (dict is null)
             return Result<TDto>.Failure("Error");
+        
+        var dictDto = _mapper.Map<T, TDto>(dict);
+        
         return Result<TDto>.Success(dictDto);
     }
 

@@ -13,6 +13,11 @@ public class DictionaryRepository<T> : IDictionaryRepository<T>
         _dbSet = context.Set<T>();
     }
 
+    public async Task<List<T>> GetAllAsync(int page, int pageSize)
+    {
+        return await _dbSet.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+    }
+
     public async Task<T> GetByIdAsync(int id)
     {
         return await _dbSet.FindAsync(id);

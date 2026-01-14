@@ -16,6 +16,15 @@ public class DictionaryController<T, TDto, TCreateDto> : ControllerBase
         _dictionaryService = dictionaryService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] int page)
+    {
+        var result = await _dictionaryService.GetAll(page);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+        return Ok(result.Value);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDictionary([FromRoute] int id)
     {

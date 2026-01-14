@@ -16,5 +16,6 @@ public class AppMapperProfile : Profile
         //     .ForMember(user => user.PersonalKey, opt => 
         //         opt.MapFrom(src => PasswordHasher.GetHash(src.Password)));
         CreateMap<Product, ProductCreateDto>().ReverseMap();
+        CreateMap<Product, ProductDto>().ReverseMap();
     }
 }
