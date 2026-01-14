@@ -34,15 +34,19 @@ public class DictionaryController<T, TDto, TCreateDto> : ControllerBase
         return Ok(result.Value);
     }
     
-    // [HttpPut("update")]
-    // public async Task<IActionResult> UpdateDictionary()
-    // {
-    //     
-    // }
-    //
-    // [HttpDelete("delete")]
-    // public async Task<IActionResult> DeleteDictionary()
-    // {
-    //     
-    // }
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> UpdateDictionary([FromRoute] int id, [FromBody] TCreateDto dto)
+    {
+        var result = await _dictionaryService.UpdateDictionary(id, dto);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+        return Ok(result.Value);
+    }
+    
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteDictionary([FromRoute] int id)
+    {
+        await _dictionaryService.DeleteDictionary(id);
+        return Ok();
+    }
 }

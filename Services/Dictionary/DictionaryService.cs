@@ -34,13 +34,18 @@ public class DictionaryService<T, TDto, TCreateDto> : IDictionaryService<T, TDto
         return Result<T>.Success(result);
     }
 
-    public Task<Result<string>> UpdateDictionary(TCreateDto item)
+    public async Task<Result<string>> UpdateDictionary(int id, TCreateDto item)
     {
-        throw new NotImplementedException();
+        var dict = await _repository.GetByIdAsync(id);
+        _mapper.Map(item, dict);
+        
+        await _repository.SaveChangesAsync();
+        return Result<string>.Success("123");
     }
 
-    public Task DeleteDictionary(int id)
+    public async Task DeleteDictionary(int id)
     {
-        throw new NotImplementedException();
+        var dictionary = await _repository.GetByIdAsync(id);
+        await _repository.DeleteAsync(dictionary);
     }
 }

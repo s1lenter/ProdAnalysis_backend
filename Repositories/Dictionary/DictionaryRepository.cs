@@ -25,13 +25,21 @@ public class DictionaryRepository<T> : IDictionaryRepository<T>
         return result.Entity;
     }
 
-    public Task<T> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(T entity)
     {
-        throw new NotImplementedException();
+        _dbSet.Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
     }
 
-    public Task<T> DeleteAsync(int id)
+    public async Task DeleteAsync(T dictionary)
     {
-        throw new NotImplementedException();
+        _dbSet.Remove(dictionary);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }
