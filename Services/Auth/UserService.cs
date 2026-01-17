@@ -27,11 +27,12 @@ public class UserService : DictionaryService<User, UserDto, UserCreateDto>
         user.CreatedAt = DateTime.UtcNow;
         var key = _keyGenerator.Generate();
         
-        user.PersonalKey = _keyHasher.Hash(key);
+        // user.PersonalKey = _keyHasher.Hash(key);
+        user.PersonalKey = key;
         
         var result = await _repository.CreateAsync(user);
         
-        user.PersonalKey = key;
+        // user.PersonalKey = key;
         
         if (result is null)
             return Result<User>.Failure("Error");

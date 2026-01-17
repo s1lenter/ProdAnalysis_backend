@@ -29,7 +29,7 @@ public class AuthService : IAuthService
     {
         var newUser =  _mapper.Map<User>(registerDto);
         newUser.DepartmentId = 1;
-        newUser.RoleId = 1;
+        // newUser.RoleId = 1;
         newUser.PersonalKey = Guid.NewGuid().ToString();
         await _repository.RegisterAsync(newUser);
         return Result<string>.Success("User created");
@@ -43,7 +43,7 @@ public class AuthService : IAuthService
         if (user is null)
             return Result<TokenResponseDto?>.Failure("Такого пользователя не существует");
 
-        if (ValidatePersonalKey(user, userLoginDto.PersonalKey))
+        if (/*ValidatePersonalKey(user, userLoginDto.PersonalKey)*/user.PersonalKey == userLoginDto.PersonalKey)
         {
             var accessToken = _tokenService.CreateToken(user);
             httpContext.Response.Cookies.Append("token", accessToken);
@@ -51,7 +51,9 @@ public class AuthService : IAuthService
             return Result<TokenResponseDto?>.Success(new TokenResponseDto
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                Role = user.Role,
+                Id = user.Id
             });
         }
         return Result<TokenResponseDto?>.Failure("Неверный пароль");

@@ -14,7 +14,6 @@ public class AppDbContext : DbContext
     public DbSet<MultiplyProduction> MultiplyProductions { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductionAnalysis> ProductionAnalyses { get; set; }
-    public DbSet<Role> Roles { get; set; }
     public DbSet<Scenario> Scenarios { get; set; }
     public DbSet<Setting> Settings { get; set; }
     public DbSet<Shift> Shifts { get; set; }
