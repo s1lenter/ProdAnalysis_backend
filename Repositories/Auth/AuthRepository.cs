@@ -23,7 +23,7 @@ public class AuthRepository : IAuthRepository
     public async Task<User?> GetUserAsync(LoginDto userLoginDto)
     {
         return await _context.Users.FirstOrDefaultAsync(user => 
-            user.Username == userLoginDto.Email); 
+            user.Email == userLoginDto.Email); 
     }
 
     public async Task CreateUserAsync(User user)
@@ -55,25 +55,25 @@ public class AuthRepository : IAuthRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<User?> GetUserAync(RegisterDto userDto)
-    {
-        return await GetUserByUsernameAsync(userDto.PersonalKey);
-    }
-
-    public async Task<User?> GetUserAync(LoginDto userDto)
-    {
-        return await GetUserByUsernameAsync(userDto.Email);
-    }
+    // public async Task<User?> GetUserAync(RegisterDto userDto)
+    // {
+    //     return await GetUserByUsernameAsync(userDto.PersonalKey);
+    // }
+    //
+    // public async Task<User?> GetUserAync(LoginDto userDto)
+    // {
+    //     return await GetUserByUsernameAsync(userDto.Email);
+    // }
 
     public async Task<User?> GetUserAsync(int id)
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<User?> GetUserByUsernameAsync(string userName)
-    {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Username == userName);
-    }
+    // public async Task<User?> GetUserByUsernameAsync(string userName)
+    // {
+    //     return await _context.Users.FirstOrDefaultAsync(u => u.Username == userName);
+    // }
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {

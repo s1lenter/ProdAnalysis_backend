@@ -35,7 +35,7 @@ public class DictionaryService<T, TDto, TCreateDto> : IDictionaryService<T, TDto
         return Result<TDto>.Success(dictDto);
     }
 
-    public async Task<Result<T>> CreateDictionary(TCreateDto item)
+    public virtual async Task<Result<T>> CreateDictionary(TCreateDto item)
     {
         var dict =  _mapper.Map<TCreateDto, T>(item);
         var result = await _repository.CreateAsync(dict);

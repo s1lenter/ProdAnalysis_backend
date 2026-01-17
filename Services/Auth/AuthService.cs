@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,20 +13,24 @@ public class AuthService : IAuthService
     private IMapper _mapper;
     private IAuthRepository _repository;
     private ITokenService _tokenService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IPersonalKeyHasher _personalKeyHasher;
 
-    public AuthService(IMapper mapper, AppDbContext context, ITokenService tokenService)
+    public AuthService(IMapper mapper, AppDbContext context, ITokenService tokenService, IHttpContextAccessor httpContextAccessor,  IPersonalKeyHasher personalKeyHasher)
     {
         _mapper = mapper;
         _repository = new AuthRepository(context);
         _tokenService = tokenService;
+        _httpContextAccessor = httpContextAccessor;
+        _personalKeyHasher = personalKeyHasher;
     }
 
     public async Task<Result<string>> RegisterAsync(RegisterDto registerDto)
     {
         var newUser =  _mapper.Map<User>(registerDto);
-        newUser.DepartamentId = 1;
+        newUser.DepartmentId = 1;
         newUser.RoleId = 1;
-        // newUser.PersonalKey = Guid.NewGuid().ToString();
+        newUser.PersonalKey = Guid.NewGuid().ToString();
         await _repository.RegisterAsync(newUser);
         return Result<string>.Success("User created");
     }
@@ -38,8 +43,7 @@ public class AuthService : IAuthService
         if (user is null)
             return Result<TokenResponseDto?>.Failure("Такого пользователя не существует");
 
-        if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PersonalKey, userLoginDto.PersonalKey) 
-            == PasswordVerificationResult.Success)
+        if (ValidatePersonalKey(user, userLoginDto.PersonalKey))
         {
             var accessToken = _tokenService.CreateToken(user);
             httpContext.Response.Cookies.Append("token", accessToken);
@@ -53,11 +57,19 @@ public class AuthService : IAuthService
         return Result<TokenResponseDto?>.Failure("Неверный пароль");
     }
     
+    private bool ValidatePersonalKey(User user, string inputKey)
+    {
+        return _personalKeyHasher.Verify(
+            inputKey, user.PersonalKey);
+    }
+    
     public async Task<Result<string>> LogoutAsync(HttpContext context)
     {
         var errorRes = new List<Dictionary<string, string>>();
 
-        var user = await _repository.GetUserByUsernameAsync(context.User.Identity.Name);
+        var currantUserId = int.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        
+        var user = await _repository.GetUserAsync(currantUserId);
         if (user == null)
             return Result<string>.Failure("Такого пользователя не существует");
 

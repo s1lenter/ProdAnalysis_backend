@@ -4,7 +4,7 @@ using ProductionAnalysisBackend.Services.Admin;
 namespace ProductionAnalysisBackend.Controllers;
 
 [ApiController]
-[Route("/api")]
+[Route("/api/admin")]
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;

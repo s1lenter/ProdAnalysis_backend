@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProductionAnalysisBackend;
@@ -11,9 +12,11 @@ using ProductionAnalysisBackend;
 namespace ProductionAnalysisBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260114163235_RemoveUsernameAddPhone")]
+    partial class RemoveUsernameAddPhone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -637,7 +640,7 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("DepartmentId")
+                    b.Property<int>("DepartamentId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Email")
@@ -672,7 +675,7 @@ namespace ProductionAnalysisBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("DepartamentId");
 
                     b.HasIndex("RoleId");
 
@@ -953,9 +956,9 @@ namespace ProductionAnalysisBackend.Migrations
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.User", b =>
                 {
-                    b.HasOne("ProductionAnalysisBackend.Models.Department", "Department")
+                    b.HasOne("ProductionAnalysisBackend.Models.Department", "Departament")
                         .WithMany("Users")
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("DepartamentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -965,7 +968,7 @@ namespace ProductionAnalysisBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("Departament");
 
                     b.Navigation("Role");
                 });

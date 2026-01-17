@@ -35,6 +35,13 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IDictionaryService<Product, ProductDto, ProductCreateDto>, 
     DictionaryService<Product, ProductDto, ProductCreateDto>>();
 
+builder.Services.AddScoped<IDictionaryService<User, UserDto, UserCreateDto>, UserService>();
+
+builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
+
+builder.Services.AddSingleton<IPersonalKeyHasher, PersonalKeyHasher>();
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
