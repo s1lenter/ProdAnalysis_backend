@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using ProductionAnalysisBackend.Dto.Supervisor;
 using ProductionAnalysisBackend.Models;
 
-namespace ProductionAnalysisBackend.Repositories.Supervizor;
+namespace ProductionAnalysisBackend.Repositories.Supervisor;
 
-public class SupervizorRepository : ISupervizorRepository
+public class SupervisorRepository : ISupervisorRepository
 {
     private readonly AppDbContext _context;
-    public SupervizorRepository(AppDbContext context)
+    public SupervisorRepository(AppDbContext context)
     {
         _context = context;
     }
@@ -26,5 +27,12 @@ public class SupervizorRepository : ISupervizorRepository
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == operatorId);
         return user.Id;
+    }
+
+    public async Task<List<Shift>> GetAsync(int userId)
+    {
+        var shifts = await _context.Shifts.Where(s => s.CreatorId == userId)
+            .OrderByDescending(s => s.Date).ToListAsync();
+        return shifts;
     }
 }

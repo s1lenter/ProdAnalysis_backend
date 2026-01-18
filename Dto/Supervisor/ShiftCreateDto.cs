@@ -1,4 +1,4 @@
-namespace ProductionAnalysisBackend.Dto.Supervizor;
+namespace ProductionAnalysisBackend.Dto.Supervisor;
 
 public class ShiftCreateDto
 {

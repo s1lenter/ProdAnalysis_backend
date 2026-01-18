@@ -12,7 +12,8 @@ using ProductionAnalysisBackend.Models;
 using ProductionAnalysisBackend.Services;
 using ProductionAnalysisBackend.Services.Admin;
 using ProductionAnalysisBackend.Services.Dictionary;
-using ProductionAnalysisBackend.Services.Supervizor;
+using ProductionAnalysisBackend.Services.Supervisor;
+using ProductionAnalysisBackend.Services.Tables;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ISupervizorService, SupervizorService>();
+builder.Services.AddScoped<ISupervisorService, SupervisorService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IDictionaryService<Product, ProductDto, ProductCreateDto>, 
@@ -40,6 +41,9 @@ builder.Services.AddScoped<IDictionaryService<User, UserDto, UserCreateDto>, Use
 builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
 
 builder.Services.AddSingleton<IPersonalKeyHasher, PersonalKeyHasher>();
+
+builder.Services.AddScoped<IPowerPerHourTableService, PowerPerHourTableService>();
+builder.Services.AddScoped<IRowService, RowService>();  
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

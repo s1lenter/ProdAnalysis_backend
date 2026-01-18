@@ -8,4 +8,6 @@ public class Product : IDictionaryEntity
     public string Description { get; set; } = null!;
     
     public List<Row> Rows { get; set; }
+    
+    public List<ProductionAnalysis> ProductionAnalysis { get; set; }
 }

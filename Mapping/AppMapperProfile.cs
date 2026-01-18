@@ -1,5 +1,7 @@
 using AutoMapper;
 using ProductionAnalysisBackend.Dto;
+using ProductionAnalysisBackend.Dto.Supervisor;
+using ProductionAnalysisBackend.Dto.Tables;
 using ProductionAnalysisBackend.Models;
 
 namespace ProductionAnalysisBackend.Mapping;
@@ -12,5 +14,11 @@ public class AppMapperProfile : Profile
         CreateMap<Product, ProductDto>().ReverseMap();
         CreateMap<User, UserDto>().ReverseMap();
         CreateMap<User, UserCreateDto>().ReverseMap();
+        CreateMap<Shift, ShiftDto>().ReverseMap();
+        CreateMap<Shift, ShiftCreateDto>().ReverseMap();
+        CreateMap<PowerPerHourTableCreateDto, ProductionAnalysis>().ReverseMap();
+        CreateMap<PowerPerHourTableCreateDto, Parameter>().ReverseMap().ForMember("PowerPerHour", opt
+            => opt.MapFrom(c => c.PowerPerHour)).ForMember("DailyTarget", opt
+            => opt.MapFrom(c => c.DailyTarget));
     }
 }

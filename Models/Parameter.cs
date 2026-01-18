@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ProductionAnalysisBackend.Models;
 
 public class Parameter

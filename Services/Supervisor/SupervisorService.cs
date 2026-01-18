@@ -1,21 +1,44 @@
 using System.Security.Claims;
-using ProductionAnalysisBackend.Dto.Supervizor;
+using AutoMapper;
+using ProductionAnalysisBackend.Dto.Supervisor;
 using ProductionAnalysisBackend.Models;
-using ProductionAnalysisBackend.Repositories.Supervizor;
+using ProductionAnalysisBackend.Repositories.Supervisor;
 
-namespace ProductionAnalysisBackend.Services.Supervizor;
+namespace ProductionAnalysisBackend.Services.Supervisor;
 
-public class SupervizorService : ISupervizorService
+public class SupervisorService : ISupervisorService
 {
-    private readonly ISupervizorRepository _repository;
+    private readonly ISupervisorRepository _repository;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private ILogger<SupervizorService> _logger;
+    private readonly ILogger<SupervisorService> _logger;
+    private readonly IMapper _mapper;
     
-    public SupervizorService(AppDbContext context, ILogger<SupervizorService> logger, IHttpContextAccessor httpContextAccessor)
+    public SupervisorService(AppDbContext context, ILogger<SupervisorService> logger, 
+        IHttpContextAccessor httpContextAccessor, IMapper mapper)
     {
         _logger = logger;
-        _repository = new SupervizorRepository(context);
+        _repository = new SupervisorRepository(context);
         _httpContextAccessor = httpContextAccessor;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<List<ShiftDto>>> GetAsync()
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        if (user is null)
+        {
+            _logger.LogError("Текущий пользователь не авторизован");
+            return Result<List<ShiftDto>>.Failure("Текущий пользователь не авторизован");
+        }
+        
+        var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        var shifts = await _repository.GetAsync(userId);
+        
+        var result =_mapper.Map<IList<Shift>, IList<ShiftDto>>(shifts).ToList();
+        
+        return Result<List<ShiftDto>>.Success(result);
     }
 
     public async Task<Result<string>> CreateShiftAsync(ShiftCreateDto shiftCreateDto)
