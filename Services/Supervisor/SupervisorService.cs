@@ -46,7 +46,7 @@ public class SupervisorService : ISupervisorService
         var operatorUser =  await _repository.GetOperatorAsync(result.OperatorId);
         result.DepartmentName = department.Name;
         result.OperatorName = $"{operatorUser.LastName} {operatorUser.FirstName[0]}. {operatorUser.MiddleName[0]}.";
-        result.ShiftType = shift.StartTime.Hour == 8 ? "Дневная" : "Вечерняя";
+        result.ShiftType = shift.StartTime.Hour == 3 ? "Дневная" : "Вечерняя";
         shift.EndTime = shift.StartTime.AddHours(8);
         
         return Result<ShiftDto>.Success(result);
@@ -66,16 +66,13 @@ public class SupervisorService : ISupervisorService
         
         var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
         
-        var startTime = DateTime.UtcNow.Date.AddHours(8);
-
-        if (shiftCreateDto.ShiftType == "Ночная")
-            startTime.AddHours(8);
+        var startTime = shiftCreateDto.ShiftType == "Вечерняя" ? DateTime.UtcNow.Date.AddHours(11) : DateTime.UtcNow.Date.AddHours(3);
         
         var shift = new Shift()
         {
             Date = DateTime.UtcNow.Date,
             StartTime = startTime,
-            Duration = duration, // как-то должна устанавливаться длительность смены
+            Duration = duration,
             EndTime = startTime.AddHours(duration),
             Status = "Создана",
             Department = await _repository.GetDepartmentAsync(shiftCreateDto.DepartmentId),
