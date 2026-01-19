@@ -94,4 +94,11 @@ public class SupervisorService : ISupervisorService
             MiddleName = u.MiddleName,
         }).ToList();
     }
+
+    public async Task CloseShiftAsync(int shiftId)
+    {
+        var shift = await _repository.GetAsync(shiftId);
+        shift.Status = "Closed";
+        await _repository.CloseShiftAsync(shift);
+    }
 }

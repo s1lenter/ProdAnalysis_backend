@@ -39,4 +39,12 @@ public class SupervisorController : ControllerBase
         var users = await _supervisorService.GetByDepartment(departmentId);
         return Ok(users);
     }
+    
+    [HttpPut("shifts/close/{shiftId}")]
+    public async Task<IActionResult> CloseShift(int shiftId)
+    {
+        await _supervisorService.CloseShiftAsync(shiftId);
+        return Ok();
+    }
+    
 }

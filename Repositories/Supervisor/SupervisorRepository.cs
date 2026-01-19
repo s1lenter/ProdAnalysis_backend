@@ -41,7 +41,7 @@ public class SupervisorRepository : ISupervisorRepository
 
     public async Task<Shift> GetAsync(int userId)
     {
-        return await _context.Shifts.FirstOrDefaultAsync(s => s.CreatorId == userId);
+        return await _context.Shifts.FirstOrDefaultAsync(s => s.CreatorId == userId && s.Status != "Closed");
     }
     
     public async Task<List<User>> GetByDepartmentId(int departmentId)
@@ -50,5 +50,11 @@ public class SupervisorRepository : ISupervisorRepository
             .Where(u => u.DepartmentId == departmentId)
             .OrderBy(u => u.LastName)
             .ToListAsync();
+    }
+
+    public async Task CloseShiftAsync(Shift shift)
+    {
+        _context.Shifts.Update(shift);
+        await _context.SaveChangesAsync();
     }
 }

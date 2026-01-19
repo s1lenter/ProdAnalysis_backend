@@ -11,4 +11,5 @@ public interface ISupervisorRepository
     public Task<int> GetOperatorIdAsync(int operatorId);
     public Task<Shift> GetAsync(int userId);
     Task<List<User>> GetByDepartmentId(int departmentId);
+    public Task CloseShiftAsync(Shift shift);
 }
