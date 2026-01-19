@@ -9,4 +9,5 @@ public interface ISupervisorRepository
     public Task<Department> GetDepartmentAsync(int departmentId);
     public Task<int> GetOperatorIdAsync(int operatorId);
     public Task<List<Shift>> GetAsync(int userId);
+    Task<List<User>> GetByDepartmentId(int departmentId);
 }

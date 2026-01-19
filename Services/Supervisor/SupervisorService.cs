@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using ProductionAnalysisBackend.Dto;
 using ProductionAnalysisBackend.Dto.Supervisor;
 using ProductionAnalysisBackend.Models;
 using ProductionAnalysisBackend.Repositories.Supervisor;
@@ -69,5 +70,22 @@ public class SupervisorService : ISupervisorService
         await _repository.CreateShiftAsync(shift);
         _logger.LogInformation("ЛОГИРУЮЮЮЮЮЮЮЮЮЮ");
         return Result<string>.Success("ok");
+    }
+    
+    public async Task<List<UserDto>> GetByDepartment(int departmentId)
+    {
+        if (departmentId <= 0)
+            throw new Exception("Некорректный departmentId");
+
+        var users = await _repository.GetByDepartmentId(departmentId);
+
+        return users.Select(u => new UserDto
+        {
+            Id = u.Id,
+            FirstName = u.FirstName,
+            LastName = u.LastName,
+            Email = u.Email,
+            MiddleName = u.MiddleName,
+        }).ToList();
     }
 }

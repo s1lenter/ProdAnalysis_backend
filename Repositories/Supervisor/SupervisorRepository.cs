@@ -35,4 +35,12 @@ public class SupervisorRepository : ISupervisorRepository
             .OrderByDescending(s => s.Date).ToListAsync();
         return shifts;
     }
+    
+    public async Task<List<User>> GetByDepartmentId(int departmentId)
+    {
+        return await _context.Users
+            .Where(u => u.DepartmentId == departmentId)
+            .OrderBy(u => u.LastName)
+            .ToListAsync();
+    }
 }

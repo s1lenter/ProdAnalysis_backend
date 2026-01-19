@@ -9,7 +9,7 @@ public class DictionaryService<T, TDto, TCreateDto> : IDictionaryService<T, TDto
     private readonly IDictionaryRepository<T> _repository;
     private readonly IMapper _mapper;
     
-    private int pageSize = 1;
+    private readonly int _pageSize = 10;
     public DictionaryService(AppDbContext dbContext, IMapper mapper)
     {
         _repository = new DictionaryRepository<T>(dbContext);
@@ -18,7 +18,7 @@ public class DictionaryService<T, TDto, TCreateDto> : IDictionaryService<T, TDto
 
     public async Task<Result<List<TDto>>> GetAll(int page)
     {
-        var dictionaries = await _repository.GetAllAsync(page, pageSize);
+        var dictionaries = await _repository.GetAllAsync(page, _pageSize);
         var dictDtos = _mapper.Map<List<TDto>>(dictionaries);
         
         return Result<List<TDto>>.Success(dictDtos);

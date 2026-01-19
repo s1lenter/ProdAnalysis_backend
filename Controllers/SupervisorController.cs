@@ -32,4 +32,11 @@ public class SupervisorController : ControllerBase
             return BadRequest(result.Error);
         return Ok(result.Value);
     }
+
+    [HttpGet("users/{departmentId}")]
+    public async Task<IActionResult> GetByDepartment(int departmentId)
+    {
+        var users = await _supervisorService.GetByDepartment(departmentId);
+        return Ok(users);
+    }
 }
