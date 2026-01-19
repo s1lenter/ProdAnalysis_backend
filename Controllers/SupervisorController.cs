@@ -34,14 +34,14 @@ public class SupervisorController : ControllerBase
     }
 
     [HttpGet("users/{departmentId}")]
-    public async Task<IActionResult> GetByDepartment(int departmentId)
+    public async Task<IActionResult> GetByDepartment([FromRoute] int departmentId)
     {
         var users = await _supervisorService.GetByDepartment(departmentId);
         return Ok(users);
     }
     
     [HttpPut("shifts/close/{shiftId}")]
-    public async Task<IActionResult> CloseShift(int shiftId)
+    public async Task<IActionResult> CloseShift([FromRoute] int shiftId)
     {
         await _supervisorService.CloseShiftAsync(shiftId);
         return Ok();

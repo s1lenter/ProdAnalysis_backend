@@ -39,9 +39,14 @@ public class SupervisorRepository : ISupervisorRepository
         return user.Id;
     }
 
-    public async Task<Shift> GetAsync(int userId)
+    public async Task<Shift> GetByUserAsync(int userId)
     {
         return await _context.Shifts.FirstOrDefaultAsync(s => s.CreatorId == userId && s.Status != "Closed");
+    }
+    
+    public async Task<Shift> GetAsync(int shiftId)
+    {
+        return await _context.Shifts.FirstOrDefaultAsync(s => s.Id == shiftId);
     }
     
     public async Task<List<User>> GetByDepartmentId(int departmentId)
