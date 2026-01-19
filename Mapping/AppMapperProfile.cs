@@ -20,5 +20,7 @@ public class AppMapperProfile : Profile
         CreateMap<PowerPerHourTableCreateDto, Parameter>().ReverseMap().ForMember("PowerPerHour", opt
             => opt.MapFrom(c => c.PowerPerHour)).ForMember("DailyTarget", opt
             => opt.MapFrom(c => c.DailyTarget));
+        CreateMap<Department, DepartmentDto>().ReverseMap();
+        CreateMap<Department, DepartmentCreateDto>().ReverseMap();
     }
 }

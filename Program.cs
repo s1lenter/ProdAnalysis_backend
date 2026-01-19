@@ -39,6 +39,9 @@ builder.Services.AddScoped<IDictionaryService<Product, ProductDto, ProductCreate
 
 builder.Services.AddScoped<IDictionaryService<User, UserDto, UserCreateDto>, UserService>();
 
+builder.Services.AddScoped<IDictionaryService<Department, DepartmentDto, DepartmentCreateDto>, 
+    DictionaryService<Department, DepartmentDto, DepartmentCreateDto>>();
+
 builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
 
 builder.Services.AddSingleton<IPersonalKeyHasher, PersonalKeyHasher>();
