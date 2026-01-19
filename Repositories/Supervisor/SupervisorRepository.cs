@@ -23,9 +23,19 @@ public class SupervisorRepository : ISupervisorRepository
         return await _context.Departments.FirstOrDefaultAsync(d => d.Id == departmentId);
     }
 
+    public async Task<User> GetOperatorAsync(int operatorId)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == operatorId);
+        if (user == null)
+            throw new NullReferenceException("User not found");
+        return user;
+    }
+    
     public async Task<int> GetOperatorIdAsync(int operatorId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == operatorId);
+        if (user == null)
+            throw new NullReferenceException("User not found");
         return user.Id;
     }
 

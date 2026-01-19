@@ -25,6 +25,17 @@ builder.Services.AddSwaggerGen();
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddAutoMapper(typeof(AppMapperProfile));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -111,6 +122,9 @@ app.MapGet("/", () => "Hello World!");
 app.UseHttpsRedirection();
 app.UseMiddleware<TokenHeaderMiddleware>();
 app.MapControllers();
+
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 

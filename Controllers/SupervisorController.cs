@@ -16,7 +16,7 @@ public class SupervisorController : ControllerBase
     }
 
     [HttpPost("shift/create")]
-    public async Task<IActionResult> CreateShift([FromForm] ShiftCreateDto shiftCreateDto)
+    public async Task<IActionResult> CreateShift([FromBody] ShiftCreateDto shiftCreateDto)
     {
         var result = await _supervisorService.CreateShiftAsync(shiftCreateDto);
         if (!result.IsSuccess)

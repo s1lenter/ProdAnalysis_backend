@@ -38,6 +38,15 @@ public class SupervisorService : ISupervisorService
         var shifts = await _repository.GetAsync(userId);
         
         var result =_mapper.Map<IList<Shift>, IList<ShiftDto>>(shifts).ToList();
+
+        foreach (var shift in result)
+        {
+            var department = await _repository.GetDepartmentAsync(shift.DepartmentId);
+            var operatorUser =  await _repository.GetOperatorAsync(shift.OperatorId);
+            shift.DepartmentName = department.Name;
+            shift.OperatorName = $"{operatorUser.LastName} {operatorUser.FirstName[0]}. {operatorUser.MiddleName[0]}.";
+            shift.EndTime = shift.StartTime.AddHours(8);
+        }
         
         return Result<List<ShiftDto>>.Success(result);
     }
@@ -65,7 +74,7 @@ public class SupervisorService : ISupervisorService
             Status = "Создана",
             Department = await _repository.GetDepartmentAsync(shiftCreateDto.DepartmentId),
             CreatorId = userId,
-            OperatorId = await _repository.GetOperatorIdAsync(shiftCreateDto.OperatorId),
+            OperatorId = await _repository.GetOperatorIdAsync(shiftCreateDto.OperatorId)
         };
         await _repository.CreateShiftAsync(shift);
         _logger.LogInformation("ЛОГИРУЮЮЮЮЮЮЮЮЮЮ");
