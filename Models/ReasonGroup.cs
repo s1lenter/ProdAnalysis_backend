@@ -1,6 +1,6 @@
 namespace ProductionAnalysisBackend.Models;
 
-public class ReasonGroup
+public class ReasonGroup : IDictionaryEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

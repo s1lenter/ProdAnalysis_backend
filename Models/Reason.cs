@@ -1,6 +1,6 @@
 namespace ProductionAnalysisBackend.Models;
 
-public class Reason
+public class Reason : IDictionaryEntity
 {
     public int Id { get; set; }
     public string Description { get; set; } = null!;

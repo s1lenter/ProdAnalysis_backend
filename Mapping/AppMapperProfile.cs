@@ -1,5 +1,6 @@
 using AutoMapper;
 using ProductionAnalysisBackend.Dto;
+using ProductionAnalysisBackend.Dto.ReasonGroup;
 using ProductionAnalysisBackend.Dto.Supervisor;
 using ProductionAnalysisBackend.Dto.Tables;
 using ProductionAnalysisBackend.Models;
@@ -22,5 +23,9 @@ public class AppMapperProfile : Profile
             => opt.MapFrom(c => c.DailyTarget));
         CreateMap<Department, DepartmentDto>().ReverseMap();
         CreateMap<Department, DepartmentCreateDto>().ReverseMap();
+        CreateMap<ReasonGroup, ReasonGroupDto>().ReverseMap();
+        CreateMap<ReasonGroup, ReasonGroupCreateDto>().ReverseMap();
+        CreateMap<Reason, ReasonDto>().ReverseMap();
+        CreateMap<Reason, ReasonCreateDto>().ReverseMap();
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProductionAnalysisBackend;
 using ProductionAnalysisBackend.Dto;
+using ProductionAnalysisBackend.Dto.ReasonGroup;
 using ProductionAnalysisBackend.Mapping;
 using ProductionAnalysisBackend.Middlewares;
 using ProductionAnalysisBackend.Models;
@@ -52,6 +53,9 @@ builder.Services.AddScoped<IDictionaryService<User, UserDto, UserCreateDto>, Use
 
 builder.Services.AddScoped<IDictionaryService<Department, DepartmentDto, DepartmentCreateDto>, 
     DictionaryService<Department, DepartmentDto, DepartmentCreateDto>>();
+
+builder.Services.AddScoped<IDictionaryService<ReasonGroup, ReasonGroupDto, ReasonGroupCreateDto>, 
+    DictionaryService<ReasonGroup, ReasonGroupDto, ReasonGroupCreateDto>>();
 
 builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
 
