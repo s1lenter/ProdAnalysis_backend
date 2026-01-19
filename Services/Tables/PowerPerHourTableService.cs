@@ -24,7 +24,7 @@ public class PowerPerHourTableService : IPowerPerHourTableService
         _mapper = mapper;
     }
     
-    public async Task Create(PowerPerHourTableCreateDto dto)
+    public async Task<int> Create(PowerPerHourTableCreateDto dto)
     {
         var user = _httpContextAccessor.HttpContext?.User;
         if (user == null)
@@ -63,6 +63,8 @@ public class PowerPerHourTableService : IPowerPerHourTableService
 
         // 4️⃣ создаём строки (ПОКА МИНИМАЛЬНО)
         await _repository.CreateRows(analysis.Id, dto.ProductId, parameters.DailyTarget / 8);
+        
+        return analysis.Id; 
     }
     
     public async Task<ProductAnalysisTableDto> GetProductTable(

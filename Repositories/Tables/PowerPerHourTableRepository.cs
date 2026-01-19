@@ -38,15 +38,17 @@ public class PowerPerHourTableRepository : IPowerPerHourTableRepository
 
     public async Task CreateRows(int id, int productId, int plan)
     {
+        var planSum = 0;
         for (int i = 0; i < 8; i++)
         {
+            planSum += plan;
             var row = new Row()
             {
                 ProductionAnalysisId = id,
                 ProductId = productId,
                 WorkIntervalId = 1,
                 PlanQTY = plan,
-                PlanCumulative = plan
+                PlanCumulative = planSum
             };
             await _context.Rows.AddAsync(row);
         }

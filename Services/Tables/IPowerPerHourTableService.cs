@@ -4,7 +4,7 @@ namespace ProductionAnalysisBackend.Services.Tables;
 
 public interface IPowerPerHourTableService
 {
-    public Task Create(PowerPerHourTableCreateDto dto);
+    public Task<int> Create(PowerPerHourTableCreateDto dto);
 
     public Task<ProductAnalysisTableDto> GetProductTable(
         int productionAnalysisId,

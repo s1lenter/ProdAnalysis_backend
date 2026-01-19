@@ -21,8 +21,8 @@ public class PowerPerHourTableController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateTable([FromBody] PowerPerHourTableCreateDto dto)
     {
-        await _powerPerHourTableService.Create(dto);
-        return Ok();
+        var id = await _powerPerHourTableService.Create(dto);
+        return Ok(id);
     }
     
     [HttpPut("update")]
@@ -33,12 +33,12 @@ public class PowerPerHourTableController : ControllerBase
     }
 
     
-    [HttpPost("fact")]
-    public async Task<IActionResult> SaveFact([FromBody] SaveFactRowDto dto)
-    {
-        await _service.SaveFactAsync(dto);
-        return Ok(new { message = "Fact data saved successfully" });
-    }
+    // [HttpPost("fact")]
+    // public async Task<IActionResult> SaveFact([FromBody] SaveFactRowDto dto)
+    // {
+    //     await _service.SaveFactAsync(dto);
+    //     return Ok(new { message = "Fact data saved successfully" });
+    // }
     
     // [HttpGet("table/{productionAnalysisId}")]
     // public async Task<IActionResult> GetTable(int productionAnalysisId)
@@ -46,6 +46,9 @@ public class PowerPerHourTableController : ControllerBase
     //     var table = await _service.GetTableRows(productionAnalysisId);
     //     return Ok(table);
     // }
+    
+    // [HttpPost("fill/{id}")]
+    // public async Task<IActionResult> GetTableAll(int id)
     
     [HttpGet("{id}/table")]
     public async Task<IActionResult> GetTableAll(int id)
