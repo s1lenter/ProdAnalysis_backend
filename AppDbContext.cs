@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Row> Rows { get; set; }
     public DbSet<Deviation> Deviations { get; set; }
     public DbSet<ProductionAnalysis> ProductionAnalyses { get; set; }
+    public DbSet<PAProduct> PAProducts { get; set; }
     public DbSet<Product> Products { get; set; }
 
     // ===== Причины простоев =====
@@ -25,6 +26,9 @@ public class AppDbContext : DbContext
     // ===== Прочее =====
     public DbSet<Parameter> Parameters { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    
+    public DbSet<ProductionCycleAnalysis> ProductionCycleAnalyses { get; set; }
+    public DbSet<CycleOperation> CycleOperations { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -104,5 +108,11 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(r => r.WorkIntervalId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<ProductionCycleAnalysis>()
+            .HasMany(p => p.Operations)
+            .WithOne(o => o.ProductionCycleAnalysis)
+            .HasForeignKey(o => o.ProductionCycleAnalysisId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

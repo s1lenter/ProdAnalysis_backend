@@ -7,7 +7,4 @@ public class WorkInterval
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public int DurationMinutes { get; set; }
-    
-    public int ProductionAnalysisId { get; set; }
-    public ProductionAnalysis ProductionAnalysis { get; set; }
 }

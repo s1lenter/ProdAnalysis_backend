@@ -11,6 +11,7 @@ using ProductionAnalysisBackend.Middlewares;
 using ProductionAnalysisBackend.Models;
 using ProductionAnalysisBackend.Services;
 using ProductionAnalysisBackend.Services.Admin;
+using ProductionAnalysisBackend.Services.CycleTables;
 using ProductionAnalysisBackend.Services.Dictionary;
 using ProductionAnalysisBackend.Services.Supervisor;
 using ProductionAnalysisBackend.Services.Tables;
@@ -43,7 +44,9 @@ builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
 builder.Services.AddSingleton<IPersonalKeyHasher, PersonalKeyHasher>();
 
 builder.Services.AddScoped<IPowerPerHourTableService, PowerPerHourTableService>();
-builder.Services.AddScoped<IRowService, RowService>();  
+builder.Services.AddScoped<IRowService, RowService>();
+
+builder.Services.AddScoped<IProductionCycleService, ProductionCycleService>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

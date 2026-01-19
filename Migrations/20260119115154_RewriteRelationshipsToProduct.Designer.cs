@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProductionAnalysisBackend;
@@ -11,9 +12,11 @@ using ProductionAnalysisBackend;
 namespace ProductionAnalysisBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119115154_RewriteRelationshipsToProduct")]
+    partial class RewriteRelationshipsToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,29 +176,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.ToTable("Equipment");
                 });
 
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.PAProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductionAnalysisId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductionAnalysisId");
-
-                    b.ToTable("PAProducts");
-                });
-
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Parameter", b =>
                 {
                     b.Property<int>("Id")
@@ -255,10 +235,15 @@ namespace ProductionAnalysisBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ProductionAnalysisId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("ScenarioId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductionAnalysisId");
 
                     b.HasIndex("ScenarioId");
 
@@ -591,10 +576,15 @@ namespace ProductionAnalysisBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ProductionAnalysisId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductionAnalysisId");
 
                     b.ToTable("WorkIntervals");
                 });
@@ -673,25 +663,6 @@ namespace ProductionAnalysisBackend.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.PAProduct", b =>
-                {
-                    b.HasOne("ProductionAnalysisBackend.Models.Product", "Product")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductionAnalysisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductionAnalysis");
-                });
-
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Parameter", b =>
                 {
                     b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
@@ -705,9 +676,17 @@ namespace ProductionAnalysisBackend.Migrations
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Product", b =>
                 {
+                    b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
+                        .WithMany("Products")
+                        .HasForeignKey("ProductionAnalysisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ProductionAnalysisBackend.Models.Scenario", null)
                         .WithMany("Products")
                         .HasForeignKey("ScenarioId");
+
+                    b.Navigation("ProductionAnalysis");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.ProductionAnalysis", b =>
@@ -851,6 +830,17 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("ProductionAnalysisBackend.Models.WorkInterval", b =>
+                {
+                    b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
+                        .WithMany()
+                        .HasForeignKey("ProductionAnalysisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductionAnalysis");
+                });
+
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Department", b =>
                 {
                     b.Navigation("Equipments");
@@ -860,8 +850,6 @@ namespace ProductionAnalysisBackend.Migrations
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Product", b =>
                 {
-                    b.Navigation("Products");
-
                     b.Navigation("Rows");
                 });
 

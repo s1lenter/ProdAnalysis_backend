@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProductionAnalysisBackend;
@@ -11,9 +12,11 @@ using ProductionAnalysisBackend;
 namespace ProductionAnalysisBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119101026_AddNewTable")]
+    partial class AddNewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,43 +53,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.HasIndex("ProductionAnalysisId");
 
                     b.ToTable("Comment");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.CycleOperation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
-                    b.Property<int>("DurationMinutes")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("FactDurationMinutes")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PlanQty")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductionCycleAnalysisId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductionCycleAnalysisId");
-
-                    b.ToTable("CycleOperations");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Department", b =>
@@ -171,29 +137,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Equipment");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.PAProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductionAnalysisId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductionAnalysisId");
-
-                    b.ToTable("PAProducts");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Parameter", b =>
@@ -288,6 +231,9 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Property<int>("OperatorId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ScenarioId")
                         .HasColumnType("integer");
 
@@ -307,45 +253,13 @@ namespace ProductionAnalysisBackend.Migrations
 
                     b.HasIndex("OperatorId");
 
+                    b.HasIndex("ProductId");
+
                     b.HasIndex("ScenarioId");
 
                     b.HasIndex("ShiftId");
 
                     b.ToTable("ProductionAnalyses");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.ProductionCycleAnalysis", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CycleTimeMinutes")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OperatorId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("OperatorId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductionCycleAnalyses");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Reason", b =>
@@ -591,10 +505,15 @@ namespace ProductionAnalysisBackend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ProductionAnalysisId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductionAnalysisId");
 
                     b.ToTable("WorkIntervals");
                 });
@@ -616,17 +535,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("ProductionAnalysis");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.CycleOperation", b =>
-                {
-                    b.HasOne("ProductionAnalysisBackend.Models.ProductionCycleAnalysis", "ProductionCycleAnalysis")
-                        .WithMany("Operations")
-                        .HasForeignKey("ProductionCycleAnalysisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductionCycleAnalysis");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Deviation", b =>
@@ -673,25 +581,6 @@ namespace ProductionAnalysisBackend.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.PAProduct", b =>
-                {
-                    b.HasOne("ProductionAnalysisBackend.Models.Product", "Product")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductionAnalysisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductionAnalysis");
-                });
-
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Parameter", b =>
                 {
                     b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
@@ -724,6 +613,12 @@ namespace ProductionAnalysisBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProductionAnalysisBackend.Models.Product", "Product")
+                        .WithMany("ProductionAnalysis")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ProductionAnalysisBackend.Models.Scenario", "Scenario")
                         .WithMany()
                         .HasForeignKey("ScenarioId")
@@ -740,36 +635,11 @@ namespace ProductionAnalysisBackend.Migrations
 
                     b.Navigation("Operator");
 
+                    b.Navigation("Product");
+
                     b.Navigation("Scenario");
 
                     b.Navigation("Shift");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.ProductionCycleAnalysis", b =>
-                {
-                    b.HasOne("ProductionAnalysisBackend.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProductionAnalysisBackend.Models.User", "Operator")
-                        .WithMany()
-                        .HasForeignKey("OperatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProductionAnalysisBackend.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Operator");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Reason", b =>
@@ -851,6 +721,17 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("ProductionAnalysisBackend.Models.WorkInterval", b =>
+                {
+                    b.HasOne("ProductionAnalysisBackend.Models.ProductionAnalysis", "ProductionAnalysis")
+                        .WithMany()
+                        .HasForeignKey("ProductionAnalysisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductionAnalysis");
+                });
+
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Department", b =>
                 {
                     b.Navigation("Equipments");
@@ -860,7 +741,7 @@ namespace ProductionAnalysisBackend.Migrations
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Product", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("ProductionAnalysis");
 
                     b.Navigation("Rows");
                 });
@@ -871,14 +752,7 @@ namespace ProductionAnalysisBackend.Migrations
 
                     b.Navigation("Parameters");
 
-                    b.Navigation("Products");
-
                     b.Navigation("Rows");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.ProductionCycleAnalysis", b =>
-                {
-                    b.Navigation("Operations");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Reason", b =>

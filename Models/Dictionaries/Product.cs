@@ -9,5 +9,5 @@ public class Product : IDictionaryEntity
     
     public List<Row> Rows { get; set; }
     
-    public List<ProductionAnalysis> ProductionAnalysis { get; set; }
+    public List<PAProduct> Products { get; set; }
 }
