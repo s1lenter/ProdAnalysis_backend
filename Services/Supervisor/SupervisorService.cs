@@ -35,7 +35,10 @@ public class SupervisorService : ISupervisorService
         
         var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-        var shift = await _repository.GetAsync(userId);
+        var shift = await _repository.GetByUserAsync(userId);
+
+        if (shift is null)
+            return Result<ShiftDto>.Failure("Смена не начата");
         
         var result =_mapper.Map<Shift, ShiftDto>(shift);
 
