@@ -22,8 +22,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen();
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
 
 builder.Services.AddCors(options =>
 {

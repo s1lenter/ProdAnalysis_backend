@@ -5,7 +5,7 @@ namespace ProductionAnalysisBackend.Services.Supervisor;
 
 public interface ISupervisorService
 {
-    public Task<Result<List<ShiftDto>>> GetAsync();
+    public Task<Result<ShiftDto>> GetAsync();
     public Task<Result<string>> CreateShiftAsync(ShiftCreateDto shiftCreateDto);
     Task<List<UserDto>> GetByDepartment(int departmentId);
 }

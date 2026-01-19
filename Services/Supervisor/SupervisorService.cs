@@ -23,32 +23,29 @@ public class SupervisorService : ISupervisorService
         _mapper = mapper;
     }
 
-    public async Task<Result<List<ShiftDto>>> GetAsync()
+    public async Task<Result<ShiftDto>> GetAsync()
     {
         var user = _httpContextAccessor.HttpContext?.User;
 
         if (user is null)
         {
             _logger.LogError("Текущий пользователь не авторизован");
-            return Result<List<ShiftDto>>.Failure("Текущий пользователь не авторизован");
+            return Result<ShiftDto>.Failure("Текущий пользователь не авторизован");
         }
         
         var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-        var shifts = await _repository.GetAsync(userId);
+        var shift = await _repository.GetAsync(userId);
         
-        var result =_mapper.Map<IList<Shift>, IList<ShiftDto>>(shifts).ToList();
+        var result =_mapper.Map<Shift, ShiftDto>(shift);
 
-        foreach (var shift in result)
-        {
-            var department = await _repository.GetDepartmentAsync(shift.DepartmentId);
-            var operatorUser =  await _repository.GetOperatorAsync(shift.OperatorId);
-            shift.DepartmentName = department.Name;
-            shift.OperatorName = $"{operatorUser.LastName} {operatorUser.FirstName[0]}. {operatorUser.MiddleName[0]}.";
-            shift.EndTime = shift.StartTime.AddHours(8);
-        }
+        var department = await _repository.GetDepartmentAsync(result.DepartmentId);
+        var operatorUser =  await _repository.GetOperatorAsync(result.OperatorId);
+        result.DepartmentName = department.Name;
+        result.OperatorName = $"{operatorUser.LastName} {operatorUser.FirstName[0]}. {operatorUser.MiddleName[0]}.";
+        shift.EndTime = shift.StartTime.AddHours(8);
         
-        return Result<List<ShiftDto>>.Success(result);
+        return Result<ShiftDto>.Success(result);
     }
 
     public async Task<Result<string>> CreateShiftAsync(ShiftCreateDto shiftCreateDto)

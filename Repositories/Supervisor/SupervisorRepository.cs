@@ -39,11 +39,9 @@ public class SupervisorRepository : ISupervisorRepository
         return user.Id;
     }
 
-    public async Task<List<Shift>> GetAsync(int userId)
+    public async Task<Shift> GetAsync(int userId)
     {
-        var shifts = await _context.Shifts.Where(s => s.CreatorId == userId)
-            .OrderByDescending(s => s.Date).ToListAsync();
-        return shifts;
+        return await _context.Shifts.FirstOrDefaultAsync(s => s.CreatorId == userId);
     }
     
     public async Task<List<User>> GetByDepartmentId(int departmentId)
