@@ -12,4 +12,6 @@ public interface IPowerPerHourTableService
         int productId);
     
     public Task<List<PaForUserDto>> GetAnalysisForUser();
+
+    public Task<List<PaForUserDto>> GetAnalysisForSupervisor();
 }

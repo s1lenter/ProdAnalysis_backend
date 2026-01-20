@@ -20,4 +20,6 @@ public interface IPowerPerHourTableRepository
     public Task<List<ProductionAnalysis>> GetAnalysisForUser(int userId);
     
     public Task<Scenario> GetScenario(int scenarioId);
+
+    public Task<List<ProductionAnalysis>> GetAnalysisForSupervisor(int userId);
 }

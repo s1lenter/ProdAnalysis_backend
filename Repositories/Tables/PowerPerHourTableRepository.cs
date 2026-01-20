@@ -95,6 +95,11 @@ public class PowerPerHourTableRepository : IPowerPerHourTableRepository
     {
         return await _context.ProductionAnalyses.Where(pa => pa.OperatorId == userId).ToListAsync();
     }
+    
+    public async Task<List<ProductionAnalysis>> GetAnalysisForSupervisor(int userId)
+    {
+        return await _context.ProductionAnalyses.Where(pa => pa.CreatorId == userId).ToListAsync();
+    }
 
     public async Task<Scenario> GetScenario(int scenarioId)
     {

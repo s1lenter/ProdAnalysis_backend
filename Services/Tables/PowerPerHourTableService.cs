@@ -146,4 +146,32 @@ public class PowerPerHourTableService : IPowerPerHourTableService
 
         return result;
     }
+    
+    public async Task<List<PaForUserDto>> GetAnalysisForSupervisor()
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        if (user == null)
+            throw new Exception("User not authorized");
+
+        var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        
+        _logger.LogInformation($"userId: {userId}");
+        
+        var analyses = await _repository.GetAnalysisForSupervisor(userId);
+
+        var result = new List<PaForUserDto>();
+        
+        foreach (var productionAnalysis in analyses)
+        {
+            result.Add(new PaForUserDto()
+            {
+                ProductionAnalysisId = productionAnalysis.Id,
+                Scenario = (await _repository.GetScenario(productionAnalysis.ScenarioId)).Name,
+                UserId = userId,
+                Status = productionAnalysis.Status,
+            });
+        }
+
+        return result;
+    }
 }

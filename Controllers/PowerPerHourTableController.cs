@@ -25,6 +25,13 @@ public class PowerPerHourTableController : ControllerBase
         return Ok(result);
     }
     
+    [HttpGet("supervisorPA")]
+    public async Task<IActionResult> GetPaForSupervisor()
+    {
+        var result = await _powerPerHourTableService.GetAnalysisForSupervisor();
+        return Ok(result);
+    }
+    
     [HttpPost("create")]
     public async Task<IActionResult> CreateTable([FromBody] PowerPerHourTableCreateDto dto)
     {
