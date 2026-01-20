@@ -30,7 +30,6 @@ public class SupervisorRepository : ISupervisorRepository
             throw new NullReferenceException("User not found");
         return user;
     }
-    
     public async Task<int> GetOperatorIdAsync(int operatorId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == operatorId);
@@ -41,7 +40,7 @@ public class SupervisorRepository : ISupervisorRepository
 
     public async Task<Shift> GetByUserAsync(int userId)
     {
-        return await _context.Shifts.FirstOrDefaultAsync(s => s.CreatorId == userId && s.Status != "Closed");
+        return await _context.Shifts.FirstOrDefaultAsync(s => (s.CreatorId == userId || s.OperatorId == userId) && s.Status != "Closed");
     }
     
     public async Task<Shift> GetAsync(int shiftId)

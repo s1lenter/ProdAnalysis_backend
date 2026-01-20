@@ -46,5 +46,4 @@ public class SupervisorController : ControllerBase
         await _supervisorService.CloseShiftAsync(shiftId);
         return Ok();
     }
-    
 }

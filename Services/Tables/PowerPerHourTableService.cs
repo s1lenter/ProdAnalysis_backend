@@ -127,6 +127,8 @@ public class PowerPerHourTableService : IPowerPerHourTableService
 
         var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         
+        _logger.LogInformation($"userId: {userId}");
+        
         var analyses = await _repository.GetAnalysisForUser(userId);
 
         var result = new List<PaForUserDto>();

@@ -78,7 +78,8 @@ public class TokenService : ITokenService
             ValidAudience = _configuration["AppSettings:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:TokenKey"]!)),
             ValidateIssuerSigningKey = true,
-            ValidateLifetime = false
+            ValidateLifetime = false,
+            NameClaimType = ClaimTypes.NameIdentifier
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var result = await tokenHandler.ValidateTokenAsync(token, tokenParams);
