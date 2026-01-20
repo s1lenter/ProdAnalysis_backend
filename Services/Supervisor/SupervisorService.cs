@@ -47,7 +47,7 @@ public class SupervisorService : ISupervisorService
         result.DepartmentName = department.Name;
         result.OperatorName = $"{operatorUser.LastName} {operatorUser.FirstName[0]}. {operatorUser.MiddleName[0]}.";
         result.ShiftType = shift.StartTime.Hour == 3 ? "Дневная" : "Вечерняя";
-        shift.EndTime = shift.StartTime.AddHours(8);
+        shift.EndTime = shift.StartTime.AddHours(9);
         
         return Result<ShiftDto>.Success(result);
     }
@@ -66,7 +66,7 @@ public class SupervisorService : ISupervisorService
         
         var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
         
-        var startTime = shiftCreateDto.ShiftType == "Вечерняя" ? DateTime.UtcNow.Date.AddHours(11) : DateTime.UtcNow.Date.AddHours(3);
+        var startTime = shiftCreateDto.ShiftType == "Вечерняя" ? DateTime.UtcNow.Date.AddHours(12) : DateTime.UtcNow.Date.AddHours(3);
         
         var shift = new Shift()
         {

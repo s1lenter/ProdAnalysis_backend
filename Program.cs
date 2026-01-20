@@ -10,10 +10,12 @@ using ProductionAnalysisBackend.Dto.ReasonGroup;
 using ProductionAnalysisBackend.Mapping;
 using ProductionAnalysisBackend.Middlewares;
 using ProductionAnalysisBackend.Models;
+using ProductionAnalysisBackend.Repositories.Excel;
 using ProductionAnalysisBackend.Services;
 using ProductionAnalysisBackend.Services.Admin;
 using ProductionAnalysisBackend.Services.CycleTables;
 using ProductionAnalysisBackend.Services.Dictionary;
+using ProductionAnalysisBackend.Services.Excel;
 using ProductionAnalysisBackend.Services.Supervisor;
 using ProductionAnalysisBackend.Services.Tables;
 
@@ -57,6 +59,9 @@ builder.Services.AddScoped<IDictionaryService<Department, DepartmentDto, Departm
 builder.Services.AddScoped<IDictionaryService<ReasonGroup, ReasonGroupDto, ReasonGroupCreateDto>, 
     DictionaryService<ReasonGroup, ReasonGroupDto, ReasonGroupCreateDto>>();
 
+builder.Services.AddScoped<IDictionaryService<Reason, ReasonDto, ReasonCreateDto>, 
+    DictionaryService<Reason, ReasonDto, ReasonCreateDto>>();
+
 builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
 
 builder.Services.AddSingleton<IPersonalKeyHasher, PersonalKeyHasher>();
@@ -65,6 +70,10 @@ builder.Services.AddScoped<IPowerPerHourTableService, PowerPerHourTableService>(
 builder.Services.AddScoped<IRowService, RowService>();
 
 builder.Services.AddScoped<IProductionCycleService, ProductionCycleService>();
+
+builder.Services.AddScoped<IProductionAnalysisExcelService, ProductionAnalysisExcelService>();
+builder.Services.AddScoped<IProductionAnalysisExcelRepository, ProductionAnalysisExcelRepository>();
+
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
