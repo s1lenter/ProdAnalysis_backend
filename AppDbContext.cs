@@ -14,7 +14,6 @@ public class AppDbContext : DbContext
 
     // ===== Причины простоев =====
     public DbSet<ReasonGroup> ReasonGroups { get; set; }
-    public DbSet<Reason> Reasons { get; set; }
 
     // ===== Пользователи и справочники =====
     public DbSet<User> Users { get; set; }
@@ -45,24 +44,6 @@ public class AppDbContext : DbContext
             .WithMany(r => r.Deviations)
             .HasForeignKey(d => d.RowId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        // =========================
-        // ReasonGroup → Reasons
-        // =========================
-        modelBuilder.Entity<Reason>()
-            .HasOne(r => r.ReasonGroup)
-            .WithMany(g => g.Reasons)
-            .HasForeignKey(r => r.GroupId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // =========================
-        // Reason → Deviations
-        // =========================
-        modelBuilder.Entity<Deviation>()
-            .HasOne(d => d.Reason)
-            .WithMany(r => r.Deviations)
-            .HasForeignKey(d => d.ReasonId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         // =========================
         // ReasonGroup → Deviations

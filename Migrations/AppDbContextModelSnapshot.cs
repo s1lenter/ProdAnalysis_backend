@@ -120,9 +120,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Property<int>("ReasonGroupId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ReasonId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ResponsibleUserId")
                         .HasColumnType("integer");
 
@@ -138,8 +135,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ReasonGroupId");
-
-                    b.HasIndex("ReasonId");
 
                     b.HasIndex("ResponsibleUserId");
 
@@ -346,28 +341,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductionCycleAnalyses");
-                });
-
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.Reason", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("Reasons");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.ReasonGroup", b =>
@@ -637,12 +610,6 @@ namespace ProductionAnalysisBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProductionAnalysisBackend.Models.Reason", "Reason")
-                        .WithMany("Deviations")
-                        .HasForeignKey("ReasonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ProductionAnalysisBackend.Models.User", "ResponsibleUser")
                         .WithMany()
                         .HasForeignKey("ResponsibleUserId")
@@ -654,8 +621,6 @@ namespace ProductionAnalysisBackend.Migrations
                         .HasForeignKey("RowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Reason");
 
                     b.Navigation("ReasonGroup");
 
@@ -772,17 +737,6 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.Reason", b =>
-                {
-                    b.HasOne("ProductionAnalysisBackend.Models.ReasonGroup", "ReasonGroup")
-                        .WithMany("Reasons")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ReasonGroup");
-                });
-
             modelBuilder.Entity("ProductionAnalysisBackend.Models.RefreshToken", b =>
                 {
                     b.HasOne("ProductionAnalysisBackend.Models.User", "User")
@@ -881,16 +835,9 @@ namespace ProductionAnalysisBackend.Migrations
                     b.Navigation("Operations");
                 });
 
-            modelBuilder.Entity("ProductionAnalysisBackend.Models.Reason", b =>
-                {
-                    b.Navigation("Deviations");
-                });
-
             modelBuilder.Entity("ProductionAnalysisBackend.Models.ReasonGroup", b =>
                 {
                     b.Navigation("Deviations");
-
-                    b.Navigation("Reasons");
                 });
 
             modelBuilder.Entity("ProductionAnalysisBackend.Models.Row", b =>

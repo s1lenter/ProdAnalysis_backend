@@ -103,7 +103,6 @@ public class PowerPerHourTableService : IPowerPerHourTableService
                 DowntimeMinutes = r.DowntimeMinutes,
 
                 ReasonGroup = d?.ReasonGroup?.Name,
-                Reason = d?.Reason?.Description,
                 Responsible = d?.ResponsibleUser?.FirstName +  " " + d?.ResponsibleUser?.LastName +  " " + d?.ResponsibleUser?.MiddleName,
 
                 Comment = d?.Comment,

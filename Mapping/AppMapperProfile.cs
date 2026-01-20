@@ -25,7 +25,5 @@ public class AppMapperProfile : Profile
         CreateMap<Department, DepartmentCreateDto>().ReverseMap();
         CreateMap<ReasonGroup, ReasonGroupDto>().ReverseMap();
         CreateMap<ReasonGroup, ReasonGroupCreateDto>().ReverseMap();
-        CreateMap<Reason, ReasonDto>().ReverseMap();
-        CreateMap<Reason, ReasonCreateDto>().ReverseMap();
     }
 }

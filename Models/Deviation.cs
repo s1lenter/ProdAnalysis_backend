@@ -13,9 +13,6 @@ public class Deviation
     public int ReasonGroupId { get; set; }
     public ReasonGroup ReasonGroup { get; set; } = null!;
 
-    public int ReasonId { get; set; }
-    public Reason Reason { get; set; } = null!;
-
     public int ResponsibleUserId { get; set; }
     public User ResponsibleUser { get; set; } = null!;
 }

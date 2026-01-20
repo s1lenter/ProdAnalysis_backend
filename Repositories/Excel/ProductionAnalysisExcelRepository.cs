@@ -27,7 +27,6 @@ public class ProductionAnalysisExcelRepository : IProductionAnalysisExcelReposit
             .ThenInclude(d => d.ReasonGroup)
             .Include(pa => pa.Rows)
             .ThenInclude(r => r.Deviations)
-            .ThenInclude(d => d.Reason)
             .Include(pa => pa.Rows)
             .ThenInclude(r => r.Deviations)
             .ThenInclude(d => d.ResponsibleUser)
@@ -70,8 +69,6 @@ public class ProductionAnalysisExcelRepository : IProductionAnalysisExcelReposit
 
                         ResponsibleUserName = d?.ResponsibleUser?.LastName + " " + d?.ResponsibleUser?.FirstName + " " + d?.ResponsibleUser?.MiddleName ?? "",
                         ReasonGroupName = d?.ReasonGroup?.Name ?? "",
-                        ReasonName = d?.Reason?.Description ?? "",
-
                         Comment = d?.Comment ?? "",
                         TakenMeasures = d?.TakenMeasures ?? ""
                     };

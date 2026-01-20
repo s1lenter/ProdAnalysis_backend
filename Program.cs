@@ -59,9 +59,6 @@ builder.Services.AddScoped<IDictionaryService<Department, DepartmentDto, Departm
 builder.Services.AddScoped<IDictionaryService<ReasonGroup, ReasonGroupDto, ReasonGroupCreateDto>, 
     DictionaryService<ReasonGroup, ReasonGroupDto, ReasonGroupCreateDto>>();
 
-builder.Services.AddScoped<IDictionaryService<Reason, ReasonDto, ReasonCreateDto>, 
-    DictionaryService<Reason, ReasonDto, ReasonCreateDto>>();
-
 builder.Services.AddSingleton<IPersonalKeyGenerator, PersonalKeyGenerator>();
 
 builder.Services.AddSingleton<IPersonalKeyHasher, PersonalKeyHasher>();

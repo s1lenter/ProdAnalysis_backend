@@ -41,7 +41,6 @@ public class RowService : IRowService
                 RowId = row.Id,
                 Value = dto.DowntimeMinutes,
                 ReasonGroupId = dto.ReasonGroupId.Value,
-                ReasonId = dto.ReasonId.Value,
                 ResponsibleUserId = dto.ResponsibleUserId.Value,
                 Comment = dto.Comment,
                 TakenMeasures = dto.TakenMeasures
@@ -181,9 +180,6 @@ public class RowService : IRowService
                 ReasonGroupId = deviation?.ReasonGroupId,
                 ReasonGroupName = deviation?.ReasonGroup?.Name,
 
-                ReasonId = deviation?.ReasonId,
-                ReasonDescription = deviation?.Reason?.Description,
-
                 ResponsibleUserId = deviation?.ResponsibleUserId,
                 ResponsibleUserName = deviation?.ResponsibleUser?.FirstName,
 
@@ -232,9 +228,6 @@ public class RowService : IRowService
 
                 ReasonGroupId = d?.ReasonGroupId,
                 ReasonGroupName = d?.ReasonGroup?.Name,
-
-                ReasonId = d?.ReasonId,
-                ReasonName = d?.Reason?.Description,
 
                 Comment = d?.Comment,
                 TakenMeasures = d?.TakenMeasures

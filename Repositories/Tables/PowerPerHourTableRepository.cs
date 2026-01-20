@@ -80,7 +80,6 @@ public class PowerPerHourTableRepository : IPowerPerHourTableRepository
             .Include(r => r.Deviations)
             .ThenInclude(d => d.ReasonGroup)
             .Include(r => r.Deviations)
-            .ThenInclude(d => d.Reason)
             .Include(r => r.Deviations)
             .ThenInclude(d => d.ResponsibleUser)
             .OrderBy(r => r.WorkIntervalId)
