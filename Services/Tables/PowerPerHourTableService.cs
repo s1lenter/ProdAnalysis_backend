@@ -139,7 +139,8 @@ public class PowerPerHourTableService : IPowerPerHourTableService
             {
                 ProductionAnalysisId = productionAnalysis.Id,
                 Scenario = (await _repository.GetScenario(productionAnalysis.ScenarioId)).Name,
-                UserId = userId
+                UserId = userId,
+                Status = productionAnalysis.Status,
             });
         }
 

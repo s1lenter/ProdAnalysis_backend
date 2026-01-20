@@ -311,5 +311,13 @@ public class RowService : IRowService
             Rows = rows
         };
     }
+
+    public async Task UpdateTableStatus(int tableId, string status)
+    {
+        var analysis = await _repository.GetAnalysisWithId(tableId);
+        if (analysis != null)
+            analysis.Status = status;
+        await _repository.Save();
+    }
 }
 

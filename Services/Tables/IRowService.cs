@@ -13,4 +13,5 @@ public interface IRowService
     public Task<ProductionAnalysisTableDto> GetTableByShift(int shiftId);
     
     public Task<ProductionAnalysisTableDto> GetTableById(int tableId);
+    Task UpdateTableStatus(int tableId, string status);
 }

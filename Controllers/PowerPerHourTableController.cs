@@ -82,4 +82,11 @@ public class PowerPerHourTableController : ControllerBase
     {
         return Ok(await _service.GetTableById(tableId));
     }
+
+    [HttpPut("update/status/{tableId}")]
+    public async Task<IActionResult> UpdateTableStatus([FromRoute] int tableId, [FromQuery] string status)
+    {
+        await _service.UpdateTableStatus(tableId, status);
+        return Ok();
+    }
 }
