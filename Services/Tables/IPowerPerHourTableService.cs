@@ -1,3 +1,4 @@
+using ProductionAnalysisBackend.Dto;
 using ProductionAnalysisBackend.Dto.Tables;
 
 namespace ProductionAnalysisBackend.Services.Tables;
@@ -9,4 +10,6 @@ public interface IPowerPerHourTableService
     public Task<ProductAnalysisTableDto> GetProductTable(
         int productionAnalysisId,
         int productId);
+    
+    public Task<List<PaForUserDto>> GetAnalysisForUser();
 }

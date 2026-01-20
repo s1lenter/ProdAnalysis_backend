@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using ProductionAnalysisBackend.Dto;
 using ProductionAnalysisBackend.Dto.Tables;
 using ProductionAnalysisBackend.Models;
 using ProductionAnalysisBackend.Repositories.Supervisor;
@@ -116,5 +117,30 @@ public class PowerPerHourTableService : IPowerPerHourTableService
             ProductName = product.Name,
             Rows = resultRows
         };
+    }
+
+    public async Task<List<PaForUserDto>> GetAnalysisForUser()
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+        if (user == null)
+            throw new Exception("User not authorized");
+
+        var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        
+        var analyses = await _repository.GetAnalysisForUser(userId);
+
+        var result = new List<PaForUserDto>();
+        
+        foreach (var productionAnalysis in analyses)
+        {
+            result.Add(new PaForUserDto()
+            {
+                ProductionAnalysisId = productionAnalysis.Id,
+                Scenario = (await _repository.GetScenario(productionAnalysis.ScenarioId)).Name,
+                UserId = userId
+            });
+        }
+
+        return result;
     }
 }

@@ -90,4 +90,14 @@ public class PowerPerHourTableRepository : IPowerPerHourTableRepository
     {
         return await _context.Products.FirstAsync(p => p.Id == productId);
     }
+
+    public async Task<List<ProductionAnalysis>> GetAnalysisForUser(int userId)
+    {
+        return await _context.ProductionAnalyses.Where(pa => pa.OperatorId == userId).ToListAsync();
+    }
+
+    public async Task<Scenario> GetScenario(int scenarioId)
+    {
+        return await _context.Scenarios.FirstOrDefaultAsync(s => s.Id == scenarioId);
+    }
 }

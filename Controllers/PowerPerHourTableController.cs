@@ -17,6 +17,13 @@ public class PowerPerHourTableController : ControllerBase
         _powerPerHourTableService = powerPerHourTableService;
         _service = service;
     }
+
+    [HttpGet("operatorPA")]
+    public async Task<IActionResult> GetPaForUser()
+    {
+        var result = await _powerPerHourTableService.GetAnalysisForUser();
+        return Ok(result);
+    }
     
     [HttpPost("create")]
     public async Task<IActionResult> CreateTable([FromBody] PowerPerHourTableCreateDto dto)
