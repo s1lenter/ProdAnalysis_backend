@@ -6,6 +6,7 @@ public class ProductionAnalysisTableDto
     // ===== ШАПКА =====
     public string ProductName { get; set; }
     public string DepartmentName { get; set; }
+    public int DepartmentId { get; set; }
     public string FilledBy { get; set; }
     public string ShiftInfo { get; set; }
 

@@ -42,8 +42,9 @@ public class ProductionAnalysisExcelRepository : IProductionAnalysisExcelReposit
             DepartmentName = pa.Department.Name,
             FilledBy = pa.Operator.LastName + " " + pa.Operator.FirstName + " " + pa.Operator.MiddleName,
             ShiftInfo = pa.CreatedAt.ToString("dd.MM.yyyy"),
-
+            
             PowerPerHour = parameter.PowerPerHour,
+            TaktTime = parameter.TaktTimeSec,
             DailyTarget = parameter.DailyTarget,
 
             Rows = pa.Rows

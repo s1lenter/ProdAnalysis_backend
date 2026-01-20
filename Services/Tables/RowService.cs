@@ -300,6 +300,7 @@ public class RowService : IRowService
         {
             Id = pa.Id,
             ProductName = product.Name,
+            DepartmentId = pa.Department.Id,
             DepartmentName = pa.Department.Name,
             FilledBy = pa.Operator.FirstName +  " " + pa.Operator.LastName +  " " + pa.Operator.MiddleName,
             ShiftInfo = pa.Shift.Date.ToShortDateString(),

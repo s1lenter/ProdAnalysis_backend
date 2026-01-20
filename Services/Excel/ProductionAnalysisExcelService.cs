@@ -53,8 +53,16 @@ public class ProductionAnalysisExcelService : IProductionAnalysisExcelService
         ws.Cell(3, 6).Value = "Дата/смена:";
         ws.Cell(3, 8).Value = data.ShiftInfo;
 
-        ws.Cell(4, 6).Value = "Мощность, шт/час:";
-        ws.Cell(4, 8).Value = data.PowerPerHour;
+        if (data.PowerPerHour is not null)
+        {
+            ws.Cell(4, 6).Value = "Мощность, шт/час:";
+            ws.Cell(4, 8).Value = data.PowerPerHour;
+        }
+        else
+        {
+            ws.Cell(4, 6).Value = "Время такта, сек:";
+            ws.Cell(4, 8).Value = data.TaktTime;
+        }
 
         ws.Cell(5, 6).Value = "Суточный темп:";
         ws.Cell(5, 8).Value = data.DailyTarget;
