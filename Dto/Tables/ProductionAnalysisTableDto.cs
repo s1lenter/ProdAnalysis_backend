@@ -2,6 +2,7 @@ namespace ProductionAnalysisBackend.Dto.Tables;
 
 public class ProductionAnalysisTableDto
 {
+    public int Id { get; set; }
     // ===== ШАПКА =====
     public string ProductName { get; set; }
     public string DepartmentName { get; set; }

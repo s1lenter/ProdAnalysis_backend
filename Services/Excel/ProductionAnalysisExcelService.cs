@@ -6,6 +6,24 @@ namespace ProductionAnalysisBackend.Services.Excel;
 public class ProductionAnalysisExcelService : IProductionAnalysisExcelService
 {
     private readonly IProductionAnalysisExcelRepository _repository;
+    
+    private static readonly List<string> TimeTemplate = new()
+    {
+        "08:00 - 09:00",
+        "09:00 - 10:00",
+        "Перерыв 15 мин",
+        "10:15 - 11:15",
+        "11:15 - 12:15",
+        "Обед 30 мин",
+        "12:45 - 13:45",
+        "13:45 - 14:45",
+        "Перерыв 15 мин",
+        "15:00 - 16:00",
+        "16:00 - 17:00",
+        "Уборка 15 мин",
+        "ИТОГО"
+    };
+
 
     public ProductionAnalysisExcelService(AppDbContext context)
     {
@@ -60,30 +78,60 @@ public class ProductionAnalysisExcelService : IProductionAnalysisExcelService
             "Принятые меры"
         };
 
-        for (int i = 0; i < headers.Length; i++)
-        {
-            ws.Cell(row, i + 1).Value = headers[i];
-            ws.Cell(row, i + 1).Style.Font.SetBold();
-        }
+        var rowIndex = 8; // после заголовков
 
-        // ===== ДАННЫЕ =====
-        row++;
-        foreach (var r in data.Rows)
+        foreach (var time in TimeTemplate)
         {
-            ws.Cell(row, 1).Value = r.WorkInterval;
-            ws.Cell(row, 2).Value = r.PlanQTY;
-            ws.Cell(row, 3).Value = r.PlanCumulative;
-            ws.Cell(row, 4).Value = r.FactQTY;
-            ws.Cell(row, 5).Value = r.FactCumulative;
-            ws.Cell(row, 6).Value = r.Deviation;
-            ws.Cell(row, 7).Value = r.DeviationCumulative;
-            ws.Cell(row, 8).Value = r.DowntimeMinutes;
-            ws.Cell(row, 9).Value = r.ResponsibleUserName;
-            ws.Cell(row,10).Value = r.ReasonGroupName;
-            ws.Cell(row,11).Value = r.ReasonName;
-            ws.Cell(row,12).Value = r.Comment;
-            ws.Cell(row,13).Value = r.TakenMeasures;
-            row++;
+            ws.Cell(rowIndex, 1).Value = time;
+
+            // ИТОГО — особая строка
+            if (time == "ИТОГО")
+            {
+                ws.Cell(rowIndex, 2).Value = data.Rows.Sum(r => r.PlanQTY);
+                ws.Cell(rowIndex, 4).Value = data.Rows.Sum(r => r.FactQTY);
+                ws.Cell(rowIndex, 6).Value = data.Rows.Sum(r => r.Deviation);
+                ws.Cell(rowIndex, 8).Value = data.Rows.Sum(r => r.DowntimeMinutes);
+
+                ws.Range(rowIndex, 1, rowIndex, 13)
+                    .Style.Font.SetBold();
+
+                rowIndex++;
+                continue;
+            }
+
+            // Перерывы / обед / уборка — серые строки без данных
+            if (time.Contains("Перерыв") || time.Contains("Обед") || time.Contains("Уборка"))
+            {
+                ws.Range(rowIndex, 1, rowIndex, 13)
+                    .Style.Fill.SetBackgroundColor(XLColor.LightGray);
+
+                rowIndex++;
+                continue;
+            }
+
+            // Пытаемся найти данные для интервала
+            var rowData = data.Rows
+                .ElementAtOrDefault(
+                    TimeTemplate.IndexOf(time)
+                );
+
+            if (rowData != null)
+            {
+                ws.Cell(rowIndex, 2).Value = rowData.PlanQTY;
+                ws.Cell(rowIndex, 3).Value = rowData.PlanCumulative;
+                ws.Cell(rowIndex, 4).Value = rowData.FactQTY;
+                ws.Cell(rowIndex, 5).Value = rowData.FactCumulative;
+                ws.Cell(rowIndex, 6).Value = rowData.Deviation;
+                ws.Cell(rowIndex, 7).Value = rowData.DeviationCumulative;
+                ws.Cell(rowIndex, 8).Value = rowData.DowntimeMinutes;
+                ws.Cell(rowIndex, 9).Value = rowData.ResponsibleUserName;
+                ws.Cell(rowIndex,10).Value = rowData.ReasonGroupName;
+                ws.Cell(rowIndex,11).Value = rowData.ReasonName;
+                ws.Cell(rowIndex,12).Value = rowData.Comment;
+                ws.Cell(rowIndex,13).Value = rowData.TakenMeasures;
+            }
+
+            rowIndex++;
         }
 
         ws.Columns().AdjustToContents();
