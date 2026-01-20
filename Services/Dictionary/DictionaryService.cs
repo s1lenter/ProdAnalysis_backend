@@ -1,10 +1,11 @@
 using AutoMapper;
+using ProductionAnalysisBackend.Models;
 using ProductionAnalysisBackend.Repositories.Dictionary;
 
 namespace ProductionAnalysisBackend.Services.Dictionary;
 
 public class DictionaryService<T, TDto, TCreateDto> : IDictionaryService<T, TDto, TCreateDto>
-    where T : class
+    where T : class, IDictionaryEntity
 {
     private readonly IDictionaryRepository<T> _repository;
     private readonly IMapper _mapper;

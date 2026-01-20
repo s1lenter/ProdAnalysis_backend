@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using ProductionAnalysisBackend.Models;
 
 namespace ProductionAnalysisBackend.Repositories.Dictionary;
 
 public class DictionaryRepository<T> : IDictionaryRepository<T>
-    where T: class
+    where T: class, IDictionaryEntity
 {
     private readonly AppDbContext _context;
     private readonly DbSet<T> _dbSet;
@@ -15,7 +16,7 @@ public class DictionaryRepository<T> : IDictionaryRepository<T>
 
     public async Task<List<T>> GetAllAsync(int page, int pageSize)
     {
-        return await _dbSet.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        return await _dbSet.Skip((page - 1) * pageSize).Take(pageSize).OrderBy(u => u.Id).ToListAsync();
     }
 
     public async Task<T> GetByIdAsync(int id)
