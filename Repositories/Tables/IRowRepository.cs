@@ -12,6 +12,6 @@ public interface IRowRepository
     public Task RemoveDeviation(Deviation deviation);
     public Task<List<Row>> GetTableRows(int productionAnalysisId);
 
-    public Task<ProductionAnalysis> GetAnalysisWithTable(int id);
+    public Task<ProductionAnalysis> GetAnalysisWithTable(int shiftId);
     Task<Product> GetProduct(int paId);
 }

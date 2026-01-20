@@ -46,14 +46,19 @@ public class PowerPerHourTableController : ControllerBase
     //     var table = await _service.GetTableRows(productionAnalysisId);
     //     return Ok(table);
     // }
-    
-    // [HttpPost("fill/{id}")]
-    // public async Task<IActionResult> GetTableAll(int id)
-    
-    [HttpGet("{id}/table")]
-    public async Task<IActionResult> GetTableAll(int id)
+
+    [HttpPost("fill/{tableId}")]
+    public async Task<IActionResult> FillTable([FromBody] UpdateTableDto dto)
     {
-        return Ok(await _service.GetTable(id));
+        await _service.UpdateRows(dto.Rows);
+        
+        return Ok();
+    }
+    
+    [HttpGet("{shiftId}/table")]
+    public async Task<IActionResult> GetTableAll([FromRoute] int shiftId)
+    {
+        return Ok(await _service.GetTable(shiftId));
     }
     
     [HttpGet("{paId}/product/{productId}/table")]

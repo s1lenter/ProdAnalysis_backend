@@ -103,6 +103,62 @@ public class RowService : IRowService
         await _repository.Save();
     }
     
+    public async Task UpdateRows(List<UpdateRowDto> dtos)
+    {
+        var factSum = 0;
+        foreach (var dto in dtos)
+        {
+            var row = await _repository.GetRowWithDeviation(dto.RowId);
+            if (row == null)
+                throw new Exception("Row not found");
+
+            // 1️⃣ обновляем факт
+            row.FactQTY = dto.FactQTY;
+            row.FactCumulative = factSum + dto.FactQTY;
+            factSum += row.FactQTY;
+            row.DowntimeMinutes = dto.DowntimeMinutes;
+
+            var deviation = row.Deviations.FirstOrDefault();
+
+            // 2️⃣ если простой есть
+            if (dto.DowntimeMinutes > 0)
+            {
+                if (dto.ReasonGroupId <= 0 ||
+                    dto.ReasonId <= 0 ||
+                    dto.ResponsibleUserId <= 0)
+                {
+                    throw new Exception("Invalid downtime data");
+                }
+
+                if (deviation == null)
+                {
+                    // ➕ создаём новое отклонение
+                    deviation = new Deviation
+                    {
+                        RowId = row.Id
+                    };
+                    row.Deviations.Add(deviation);
+                }
+
+                deviation.Value = dto.DowntimeMinutes;
+                deviation.ReasonGroupId = dto.ReasonGroupId.Value;
+                deviation.ReasonId = dto.ReasonId.Value;
+                deviation.ResponsibleUserId = dto.ResponsibleUserId.Value;
+                deviation.Comment = dto.Comment;
+                deviation.TakenMeasures = dto.TakenMeasures;
+            }
+            else
+            {
+                // 3️⃣ простоя нет — удаляем отклонение
+                if (deviation != null)
+                {
+                    _repository.RemoveDeviation(deviation);
+                }
+            }
+        }
+        await _repository.Save();
+    }
+    
     public async Task<List<RowTableDto>> GetTableRows(int productionAnalysisId)
     {
         var rows = await _repository.GetTableRows(productionAnalysisId);
@@ -143,9 +199,9 @@ public class RowService : IRowService
         return result;
     }
     
-    public async Task<ProductionAnalysisTableDto> GetTable(int id)
+    public async Task<ProductionAnalysisTableDto> GetTable(int shiftId)
     {
-        var pa = await _repository.GetAnalysisWithTable(id);
+        var pa = await _repository.GetAnalysisWithTable(shiftId);
 
         var rows = new List<ProductionAnalysisRowDto>();
 
