@@ -65,7 +65,7 @@ public class PowerPerHourTableController : ControllerBase
     [HttpGet("{shiftId}/table")]
     public async Task<IActionResult> GetTableAll([FromRoute] int shiftId)
     {
-        return Ok(await _service.GetTable(shiftId));
+        return Ok(await _service.GetTableByShift(shiftId));
     }
     
     [HttpGet("{paId}/product/{productId}/table")]
@@ -75,5 +75,11 @@ public class PowerPerHourTableController : ControllerBase
     {
         var table = await _powerPerHourTableService.GetProductTable(paId, productId);
         return Ok(table);
+    }
+    
+    [HttpGet("table/{tableId}")]
+    public async Task<IActionResult> GetTableById([FromRoute] int tableId)
+    {
+        return Ok(await _service.GetTableById(tableId));
     }
 }

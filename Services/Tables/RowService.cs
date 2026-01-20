@@ -191,9 +191,69 @@ public class RowService : IRowService
         return result;
     }
     
-    public async Task<ProductionAnalysisTableDto> GetTable(int shiftId)
+    public async Task<ProductionAnalysisTableDto> GetTableByShift(int shiftId)
     {
-        var pa = await _repository.GetAnalysisWithTable(shiftId);
+        var pa = await _repository.GetAnalysisWithShift(shiftId);
+
+        var rows = new List<ProductionAnalysisRowDto>();
+
+        int cumulativePlan = 0;
+        int cumulativeFact = 0;
+
+        foreach (var r in pa.Rows.OrderBy(x => x.WorkIntervalId))
+        {
+            cumulativePlan += r.PlanQTY;
+            cumulativeFact += r.FactQTY;
+
+            var d = r.Deviations.FirstOrDefault();
+
+            rows.Add(new ProductionAnalysisRowDto
+            {
+                RowId = r.Id,
+                WorkInterval = r.WorkInterval.Name,
+
+                PlanQTY = r.PlanQTY,
+                PlanCumulative = cumulativePlan,
+
+                FactQTY = r.FactQTY,
+                FactCumulative = cumulativeFact,
+
+                Deviation = r.FactQTY - r.PlanQTY,
+                DeviationCumulative = cumulativeFact - cumulativePlan,
+
+                DowntimeMinutes = r.DowntimeMinutes,
+
+                ResponsibleUserId = d?.ResponsibleUserId,
+                ResponsibleUserName = d?.ResponsibleUser?.FirstName +  " " + d?.ResponsibleUser?.LastName +  " " + d?.ResponsibleUser?.MiddleName,
+
+                ReasonGroupId = d?.ReasonGroupId,
+                ReasonGroupName = d?.ReasonGroup?.Name,
+
+                Comment = d?.Comment,
+                TakenMeasures = d?.TakenMeasures
+            });
+        }
+
+        var product = await _repository.GetProduct(pa.Id);
+
+        return new ProductionAnalysisTableDto
+        {
+            Id = pa.Id,
+            ProductName = product.Name,
+            DepartmentName = pa.Department.Name,
+            FilledBy = pa.Operator.FirstName +  " " + pa.Operator.LastName +  " " + pa.Operator.MiddleName,
+            ShiftInfo = pa.Shift.Date.ToShortDateString(),
+
+            PowerPerHour = pa.Parameters[0].PowerPerHour,
+            DailyTarget = pa.Parameters[0].DailyTarget,
+
+            Rows = rows
+        };
+    }
+
+    public async Task<ProductionAnalysisTableDto> GetTableById(int tableId)
+    {
+        var pa = await _repository.GetAnalysisWithId(tableId);
 
         var rows = new List<ProductionAnalysisRowDto>();
 

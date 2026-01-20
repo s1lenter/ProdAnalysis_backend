@@ -63,7 +63,7 @@ public class RowRepository : IRowRepository
             .ToListAsync();
     }
     
-    public async Task<ProductionAnalysis> GetAnalysisWithTable(int shiftId)
+    public async Task<ProductionAnalysis> GetAnalysisWithShift(int shiftId)
     {
         return await _context.ProductionAnalyses
             .Include(pa => pa.Department)
@@ -81,6 +81,26 @@ public class RowRepository : IRowRepository
             .ThenInclude(r => r.Deviations)
             .ThenInclude(d => d.ResponsibleUser)
             .FirstAsync(pa => pa.ShiftId == shiftId);
+    }
+
+    public async Task<ProductionAnalysis> GetAnalysisWithId(int tableId)
+    {
+        return await _context.ProductionAnalyses
+            .Include(pa => pa.Department)
+            .Include(pa => pa.Operator)
+            .Include(pa => pa.Shift)
+            .Include(pa => pa.Parameters)
+            .Include(pa => pa.Rows)
+            .ThenInclude(r => r.WorkInterval)
+            .Include(pa => pa.Rows)
+            .ThenInclude(r => r.Deviations)
+            .ThenInclude(d => d.ReasonGroup)
+            .Include(pa => pa.Rows)
+            .ThenInclude(r => r.Deviations)
+            .Include(pa => pa.Rows)
+            .ThenInclude(r => r.Deviations)
+            .ThenInclude(d => d.ResponsibleUser)
+            .FirstAsync(pa => pa.Id == tableId);
     }
 
     public async Task<Product> GetProduct(int paId)

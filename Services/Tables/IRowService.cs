@@ -10,5 +10,7 @@ public interface IRowService
     Task UpdateRows(List<UpdateRowDto> dtos);
     public Task<List<RowTableDto>> GetTableRows(int productionAnalysisId);
 
-    public Task<ProductionAnalysisTableDto> GetTable(int shiftId);
+    public Task<ProductionAnalysisTableDto> GetTableByShift(int shiftId);
+    
+    public Task<ProductionAnalysisTableDto> GetTableById(int tableId);
 }
