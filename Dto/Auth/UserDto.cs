@@ -12,5 +12,5 @@ public class UserDto
     public string PhoneNumber { get; set; }
     
     public int DepartmentId { get; set; }
-    public int RoleId { get; set; }
+    public string Role { get; set; }
 }

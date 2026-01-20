@@ -9,9 +9,9 @@ public class UserController : DictionaryController<User, UserDto, UserCreateDto>
 {
     public UserController(IDictionaryService<User, UserDto, UserCreateDto> dictionaryService) : base(dictionaryService) {}
 
-    [HttpGet("/users/{departmentId}")]
-    public ActionResult GetUsersFromDepartment(int departmentId)
-    {
-        return Ok();
-    }
+    // [HttpGet("/users/{departmentId}")]
+    // public ActionResult GetUsersFromDepartment(int departmentId)
+    // {
+    //     return Ok();
+    // }
 }
