@@ -8,7 +8,7 @@ public class UpdateRowDto
     public int DowntimeMinutes { get; set; }
 
     public int? ReasonGroupId { get; set; }
-    public int? ReasonId { get; set; }
+    // public int? ReasonId { get; set; }
     public int? ResponsibleUserId { get; set; }
 
     public string? Comment { get; set; }

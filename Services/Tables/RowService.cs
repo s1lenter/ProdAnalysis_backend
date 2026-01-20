@@ -68,7 +68,6 @@ public class RowService : IRowService
         if (dto.DowntimeMinutes > 0)
         {
             if (dto.ReasonGroupId <= 0 ||
-                dto.ReasonId <= 0 ||
                 dto.ResponsibleUserId <= 0)
             {
                 throw new Exception("Invalid downtime data");
@@ -86,7 +85,6 @@ public class RowService : IRowService
 
             deviation.Value = dto.DowntimeMinutes;
             deviation.ReasonGroupId = dto.ReasonGroupId.Value;
-            deviation.ReasonId = dto.ReasonId.Value;
             deviation.ResponsibleUserId = dto.ResponsibleUserId.Value;
             deviation.Comment = dto.Comment;
             deviation.TakenMeasures = dto.TakenMeasures;
@@ -124,7 +122,6 @@ public class RowService : IRowService
             if (dto.DowntimeMinutes > 0)
             {
                 if (dto.ReasonGroupId <= 0 ||
-                    dto.ReasonId <= 0 ||
                     dto.ResponsibleUserId <= 0)
                 {
                     throw new Exception("Invalid downtime data");
@@ -142,7 +139,6 @@ public class RowService : IRowService
 
                 deviation.Value = dto.DowntimeMinutes;
                 deviation.ReasonGroupId = dto.ReasonGroupId.Value;
-                deviation.ReasonId = dto.ReasonId.Value;
                 deviation.ResponsibleUserId = dto.ResponsibleUserId.Value;
                 deviation.Comment = dto.Comment;
                 deviation.TakenMeasures = dto.TakenMeasures;

@@ -7,7 +7,7 @@ public class ProductionAnalysisExcelService : IProductionAnalysisExcelService
 {
     private readonly IProductionAnalysisExcelRepository _repository;
     
-    private static readonly List<string> TimeTemplate = new()
+    private static readonly List<string> DayTemplate = new()
     {
         "08:00 - 09:00",
         "09:00 - 10:00",
@@ -78,60 +78,60 @@ public class ProductionAnalysisExcelService : IProductionAnalysisExcelService
             "Принятые меры"
         };
 
-        var rowIndex = 8; // после заголовков
+        var excelRow = 8;
+        var dataIndex = 0; // 👈 индекс по данным из БД
 
-        foreach (var time in TimeTemplate)
+        foreach (var slot in DayTemplate)
         {
-            ws.Cell(rowIndex, 1).Value = time;
+            ws.Cell(excelRow, 1).Value = slot;
 
-            // ИТОГО — особая строка
-            if (time == "ИТОГО")
+            // ===== ИТОГО =====
+            if (slot == "ИТОГО")
             {
-                ws.Cell(rowIndex, 2).Value = data.Rows.Sum(r => r.PlanQTY);
-                ws.Cell(rowIndex, 4).Value = data.Rows.Sum(r => r.FactQTY);
-                ws.Cell(rowIndex, 6).Value = data.Rows.Sum(r => r.Deviation);
-                ws.Cell(rowIndex, 8).Value = data.Rows.Sum(r => r.DowntimeMinutes);
+                ws.Cell(excelRow, 2).Value = data.Rows.Sum(r => r.PlanQTY);
+                ws.Cell(excelRow, 4).Value = data.Rows.Sum(r => r.FactQTY);
+                ws.Cell(excelRow, 6).Value = data.Rows.Sum(r => r.Deviation);
+                ws.Cell(excelRow, 8).Value = data.Rows.Sum(r => r.DowntimeMinutes);
 
-                ws.Range(rowIndex, 1, rowIndex, 13)
+                ws.Range(excelRow, 1, excelRow, 13)
                     .Style.Font.SetBold();
 
-                rowIndex++;
-                continue;
+                excelRow++;
+                break;
             }
 
-            // Перерывы / обед / уборка — серые строки без данных
-            if (time.Contains("Перерыв") || time.Contains("Обед") || time.Contains("Уборка"))
+            // ===== ПЕРЕРЫВ / ОБЕД / УБОРКА =====
+            if (slot.Contains("Перерыв") || slot.Contains("Обед") || slot.Contains("Уборка"))
             {
-                ws.Range(rowIndex, 1, rowIndex, 13)
+                ws.Range(excelRow, 1, excelRow, 13)
                     .Style.Fill.SetBackgroundColor(XLColor.LightGray);
 
-                rowIndex++;
+                excelRow++;
                 continue;
             }
 
-            // Пытаемся найти данные для интервала
-            var rowData = data.Rows
-                .ElementAtOrDefault(
-                    TimeTemplate.IndexOf(time)
-                );
-
-            if (rowData != null)
+            // ===== РАБОЧИЙ ЧАС =====
+            if (dataIndex < data.Rows.Count)
             {
-                ws.Cell(rowIndex, 2).Value = rowData.PlanQTY;
-                ws.Cell(rowIndex, 3).Value = rowData.PlanCumulative;
-                ws.Cell(rowIndex, 4).Value = rowData.FactQTY;
-                ws.Cell(rowIndex, 5).Value = rowData.FactCumulative;
-                ws.Cell(rowIndex, 6).Value = rowData.Deviation;
-                ws.Cell(rowIndex, 7).Value = rowData.DeviationCumulative;
-                ws.Cell(rowIndex, 8).Value = rowData.DowntimeMinutes;
-                ws.Cell(rowIndex, 9).Value = rowData.ResponsibleUserName;
-                ws.Cell(rowIndex,10).Value = rowData.ReasonGroupName;
-                ws.Cell(rowIndex,11).Value = rowData.ReasonName;
-                ws.Cell(rowIndex,12).Value = rowData.Comment;
-                ws.Cell(rowIndex,13).Value = rowData.TakenMeasures;
+                var rowData = data.Rows[dataIndex];
+
+                ws.Cell(excelRow, 2).Value = rowData.PlanQTY;
+                ws.Cell(excelRow, 3).Value = rowData.PlanCumulative;
+                ws.Cell(excelRow, 4).Value = rowData.FactQTY;
+                ws.Cell(excelRow, 5).Value = rowData.FactCumulative;
+                ws.Cell(excelRow, 6).Value = rowData.Deviation;
+                ws.Cell(excelRow, 7).Value = rowData.DeviationCumulative;
+                ws.Cell(excelRow, 8).Value = rowData.DowntimeMinutes;
+                ws.Cell(excelRow, 9).Value = rowData.ResponsibleUserName;
+                ws.Cell(excelRow,10).Value = rowData.ReasonGroupName;
+                ws.Cell(excelRow,11).Value = rowData.ReasonName;
+                ws.Cell(excelRow,12).Value = rowData.Comment;
+                ws.Cell(excelRow,13).Value = rowData.TakenMeasures;
+
+                dataIndex++; // 🔥 СДВИГАЕМСЯ ТОЛЬКО НА РАБОЧИХ СТРОКАХ
             }
 
-            rowIndex++;
+            excelRow++;
         }
 
         ws.Columns().AdjustToContents();
